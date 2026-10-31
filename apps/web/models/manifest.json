@@ -1,0 +1,35 @@
+{
+  "models": {
+    "mesh": {
+      "file": "face-mesh-478.onnx",
+      "bytes": 4920995,
+      "sha256": "f38c3321ceffbc9e95103480ad38cc3f52e7e1bde2bcee7cd9355d0b9138ac0c",
+      "source": "https://huggingface.co/naklitechie/face-landmarks-onnx (face_landmarks.onnx): Google MediaPipe face_landmarks_detector.tflite from the face_landmarker.task v1 float16 bundle, converted with tf2onnx (opset 17), weights unchanged",
+      "license": "Apache-2.0",
+      "input": {
+        "name": "input_12",
+        "shape": [1, 256, 256, 3],
+        "layout": "NHWC, RGB in [0, 1], a face crop"
+      },
+      "outputs": {
+        "landmarks": "Identity [1, 1, 1, 1434]: 478 points x (x, y, z) in input pixels",
+        "presence": "Identity_1 [1, 1, 1, 1]: face-presence logit"
+      }
+    },
+    "pad": {
+      "file": "minifasnet-v2-80.onnx",
+      "bytes": 1743581,
+      "sha256": "b32929adc2d9c34b9486f8c4c7bc97c1b69bc0ea9befefc380e4faae4e463907",
+      "source": "https://github.com/yakhyo/face-anti-spoofing/releases/download/weights/MiniFASNetV2.onnx: minivision-ai/Silent-Face-Anti-Spoofing 2.7_80x80_MiniFASNetV2.pth exported to ONNX (PyTorch 2.8)",
+      "license": "Apache-2.0",
+      "input": {
+        "name": "input",
+        "shape": [1, 3, 80, 80],
+        "layout": "NCHW, BGR in [0, 255], a 2.7x face crop"
+      },
+      "outputs": {
+        "logits": "output [1, 3]: softmax index 1 is a live face"
+      }
+    }
+  }
+}

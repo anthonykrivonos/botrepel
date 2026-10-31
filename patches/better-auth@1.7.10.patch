@@ -1,0 +1,24 @@
+diff --git a/dist/db/get-migration.mjs b/dist/db/get-migration.mjs
+index b15902a7186719bb3dd7a0d35890922f752025df..992b3e5cd233fa660444a35ed98547cc9b14762a 100644
+--- a/dist/db/get-migration.mjs
++++ b/dist/db/get-migration.mjs
+@@ -16,6 +16,7 @@ const map = {
+ 		],
+ 		number: [
+ 			"int4",
++			"int8",
+ 			"integer",
+ 			"bigint",
+ 			"smallint",
+@@ -322,7 +323,10 @@ function matchType(columnDataType, fieldType, dbType) {
+ 	function normalize(type) {
+ 		return type.toLowerCase().split("(")[0].trim();
+ 	}
+-	if (fieldType === "string[]" || fieldType === "number[]") return columnDataType.toLowerCase().includes("json");
++	if (fieldType === "string[]" || fieldType === "number[]") {
++		if (dbType === "sqlite") return normalize(columnDataType) === "text";
++		return columnDataType.toLowerCase().includes("json");
++	}
+ 	const types = map[dbType];
+ 	return (Array.isArray(fieldType) ? types["string"].map((t) => t.toLowerCase()) : types[fieldType].map((t) => t.toLowerCase())).includes(normalize(columnDataType));
+ }

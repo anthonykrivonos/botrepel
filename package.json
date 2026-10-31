@@ -1,0 +1,75 @@
+{
+  "name": "botrepel-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "bun apps/web/build.ts",
+    "build:packages": "bun run --filter botrepel build",
+    "check": "bun run typecheck && bun run lint && bun run format:check && bun run test && bun run build",
+    "check:full": "bun run check && bun run test:e2e",
+    "db:migrate": "bun apps/web/lib/migrate.ts",
+    "demo:seed": "bun scripts/seed-demo-site.ts",
+    "dev": "bun --hot apps/web/src/index.ts",
+    "face:points": "bun scripts/face-points.ts",
+    "format": "prettier --write . --cache --cache-location .cache/prettier",
+    "format:check": "prettier --check . --cache --cache-location .cache/prettier",
+    "postinstall": "bun scripts/postinstall.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "liveness:metrics": "bun scripts/liveness-metrics.ts",
+    "og:image": "bun scripts/og-image.ts",
+    "pack:local": "bun scripts/pack-local.ts",
+    "prepare": "husky",
+    "preview": "bun run start",
+    "skills:update": "bunx --bun skills@1.7.4 update --project --yes",
+    "smoke:packages": "bun run build:packages && bun scripts/smoke-packages.ts",
+    "start": "bun apps/web/preview.ts",
+    "test": "bun test apps/web/tests packages",
+    "test:changed": "bun test --changed --only-failures apps/web/tests packages",
+    "test:coverage": "bun test --coverage --coverage-reporter=text --coverage-reporter=lcov apps/web/tests",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:integration": "bun test apps/web/tests/integration",
+    "test:nightly": "LIVENESS_CORPUS=nightly bun test apps/web/tests/unit/liveness-budgets.test.ts",
+    "test:postgres": "bun scripts/test-postgres.ts",
+    "test:unit": "bun test apps/web/tests/unit",
+    "typecheck": "tsc --noEmit",
+    "whitepaper": "tectonic -X compile apps/web/public/research/botrepel-whitepaper.tex"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,html}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "^1.63.0",
+    "@types/bun": "1.4.3",
+    "bun": "1.4.3",
+    "dts-bundle-generator": "9.5.1",
+    "eslint": "^9.39.5",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-packagejson": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript": "^5",
+    "typescript-eslint": "^8.71.1"
+  },
+  "packageManager": "bun@1.4.3",
+  "patchedDependencies": {
+    "better-auth@1.7.10": "patches/better-auth@1.7.10.patch"
+  }
+}

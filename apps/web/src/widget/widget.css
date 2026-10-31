@@ -1,0 +1,44 @@
+/* The widget shares the site's tokens; a light theme swaps the surfaces and text for host pages that are light. */
+@import "../styles.css";
+
+html,
+body {
+  background: transparent;
+  overflow: hidden;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-canvas: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f6f6f7;
+  --color-fg: #0a0a0c;
+  --color-fg-body: rgb(10 10 12 / 0.86);
+  --color-fg-muted: rgb(10 10 12 / 0.64);
+  --color-fg-subtle: #6b7076;
+  --color-line: rgb(0 0 0 / 0.08);
+  --color-line-strong: rgb(0 0 0 / 0.14);
+  --color-ok: #0a7a4b;
+  --color-ok-wash: rgb(10 122 75 / 0.1);
+  --color-danger: #c11a2e;
+  --color-danger-wash: rgb(193 26 46 / 0.08);
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme="auto"] {
+    color-scheme: light;
+    --color-canvas: #ffffff;
+    --color-surface: #ffffff;
+    --color-surface-raised: #f6f6f7;
+    --color-fg: #0a0a0c;
+    --color-fg-body: rgb(10 10 12 / 0.86);
+    --color-fg-muted: rgb(10 10 12 / 0.64);
+    --color-fg-subtle: #6b7076;
+    --color-line: rgb(0 0 0 / 0.08);
+    --color-line-strong: rgb(0 0 0 / 0.14);
+    --color-ok: #0a7a4b;
+    --color-ok-wash: rgb(10 122 75 / 0.1);
+    --color-danger: #c11a2e;
+    --color-danger-wash: rgb(193 26 46 / 0.08);
+  }
+}

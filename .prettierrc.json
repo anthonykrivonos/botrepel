@@ -1,0 +1,6 @@
+{
+  "printWidth": 120,
+  "plugins": ["prettier-plugin-packagejson", "prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./apps/web/src/styles.css",
+  "tailwindFunctions": ["cn", "buttonClassName"]
+}

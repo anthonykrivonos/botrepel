@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun test:*)",
+      "Bash(bun run test:*)",
+      "Bash(bun run check:*)",
+      "Bash(bun run typecheck:*)",
+      "Bash(bun run lint:*)",
+      "Bash(bun run format:*)",
+      "Bash(bun run build:*)",
+      "Bash(bunx playwright test:*)",
+      "Bash(bunx playwright show-trace:*)",
+      "Bash(bunx playwright show-report:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh stack view:*)"
+    ]
+  },
+  "enabledMcpjsonServers": ["playwright-test"]
+}

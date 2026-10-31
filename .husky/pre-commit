@@ -1,0 +1,9 @@
+if git diff --cached --name-only --diff-filter=ACMR | git check-ignore --no-index --stdin >/dev/null; then
+  printf '%s\n' 'Do not commit ignored local files or generated reports. Keep one-off work in /tmp or .scratch/ and unstage it.' >&2
+  exit 1
+fi
+
+if git diff --cached --name-only | grep -qE '\.(ts|tsx)$'; then
+  bun run typecheck
+fi
+bunx lint-staged

@@ -1,0 +1,56 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+# One-off experiments, repros, scripts, and reports
+.scratch/
+/.learnings/
+/scratch/
+/tmp/
+/temp/
+# server bundle and browser source maps (apps/web/build.ts)
+apps/web/.build
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+*.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+.env.*
+!.env.example
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Vercel project linkage and local build output
+.vercel
+
+# local SQLite database (bun run dev)
+.data
+# Playwright (bun run test:e2e): reports, traces, and seeded session cookies
+test-results
+playwright-report
+.playwright-mcp
+blob-report
+playwright/.auth

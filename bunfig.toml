@@ -1,0 +1,16 @@
+[test]
+# Keeps tests off real providers and quiets expected failure logs (Bun loads .env).
+preload = ["./apps/web/tests/setup.ts"]
+# Playwright owns the browser suite (bun run test:e2e); its files never run under bun test.
+pathIgnorePatterns = ["apps/web/tests/e2e/**", "playwright.config.ts"]
+
+[install]
+# Hoisted (flat) node_modules. Vercel's function bundler does not follow the
+# isolated linker's node_modules/.bun symlinks, so functions failed to resolve imports.
+linker = "hoisted"
+
+[serve.static]
+# Same CSS plugin as the production build.
+plugins = ["bun-plugin-tailwind"]
+# Inlines PUBLIC_* variables into browser code, as build.ts does.
+env = "PUBLIC_*"

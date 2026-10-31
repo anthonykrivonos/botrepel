@@ -1,0 +1,145 @@
+name: ci
+
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  HUSKY: "0"
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        check: [typecheck, lint, format:check]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - if: matrix.check == 'typecheck'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/tsc.tsbuildinfo
+          key: typecheck-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock', 'package.json', 'apps/*/package.json', 'tsconfig.json', 'apps/*/tsconfig*.json', 'bunfig.toml') }}-${{ github.sha }}
+          restore-keys: typecheck-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock', 'package.json', 'apps/*/package.json', 'tsconfig.json', 'apps/*/tsconfig*.json', 'bunfig.toml') }}-
+      - if: matrix.check == 'format:check'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/prettier
+          key: prettier-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock', 'package.json', '.prettierrc*', '.prettierignore', 'apps/web/src/styles.css') }}-${{ github.sha }}
+          restore-keys: prettier-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock', 'package.json', '.prettierrc*', '.prettierignore', 'apps/web/src/styles.css') }}-
+      - run: bun run ${{ matrix.check }}
+      - if: matrix.check == 'lint'
+        run: bun audit --audit-level=high
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: bun run test
+
+  # Production runs on Postgres; SQLite hides integer widths, timestamp types, and SQL dialect differences.
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: bun run test:postgres
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: bun run build
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-sourcemaps-${{ github.sha }}
+          overwrite: true
+          path: apps/web/.build/browser-sourcemaps/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  # Installs the packed tarballs into an empty project, as a customer would, under NODE_ENV=production.
+  packages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: bun run smoke:packages
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('node_modules/playwright-core/browsers.json', 'node_modules/playwright-core/package.json') }}
+      # The full Chromium build: one test runs the new headless mode, which the shell lacks.
+      - run: bunx playwright install --with-deps chromium webkit firefox
+      - run: bun run test:e2e
+      - if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-report
+          overwrite: true
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  ci:
+    if: always()
+    needs: [static, test, postgres, build, packages, e2e]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
+        run: |
+          echo "A required job did not succeed: ${{ join(needs.*.result, ', ') }}"
+          exit 1
+      - run: echo "All checks passed."

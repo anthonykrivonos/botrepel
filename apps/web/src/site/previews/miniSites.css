@@ -1,0 +1,143 @@
+.mini-site-before {
+  opacity: 1;
+}
+.mini-site-after,
+.mini-site-result,
+.mini-site-cursor,
+.mini-site-click {
+  opacity: 0;
+}
+.mini-site[data-active="true"] .mini-site-before {
+  animation: mini-site-before 4.8s both;
+}
+.mini-site[data-active="true"] .mini-site-after {
+  animation: mini-site-after 4.8s both;
+}
+.mini-site[data-active="true"] .mini-site-result {
+  animation: mini-site-result 4.8s both;
+}
+.mini-site[data-active="true"] .mini-site-cursor {
+  animation: mini-site-cursor 4.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.mini-site[data-active="true"] .mini-site-click {
+  animation: mini-site-click 4.8s both;
+}
+.mini-site[data-active="true"] .mini-site-action {
+  animation: mini-site-action 4.8s both;
+}
+
+@keyframes mini-site-cursor {
+  0%,
+  8% {
+    opacity: 0;
+    left: 65%;
+    top: 25%;
+    transform: scale(1);
+  }
+  16% {
+    opacity: 1;
+    left: 65%;
+    top: 25%;
+  }
+  42%,
+  48% {
+    opacity: 1;
+    left: 82%;
+    top: 87%;
+    transform: scale(1);
+  }
+  51% {
+    opacity: 1;
+    left: 82%;
+    top: 87%;
+    transform: scale(0.88);
+  }
+  56%,
+  73% {
+    opacity: 1;
+    left: 82%;
+    top: 87%;
+    transform: scale(1);
+  }
+  88%,
+  100% {
+    opacity: 0;
+    left: 89%;
+    top: 68%;
+    transform: scale(1);
+  }
+}
+@keyframes mini-site-before {
+  0%,
+  58% {
+    opacity: 1;
+  }
+  64%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes mini-site-after {
+  0%,
+  58% {
+    opacity: 0;
+  }
+  64%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes mini-site-result {
+  0%,
+  65% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  75%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes mini-site-click {
+  0%,
+  48% {
+    opacity: 0;
+    scale: 0.5;
+  }
+  51% {
+    opacity: 0.8;
+    scale: 0.75;
+  }
+  63%,
+  100% {
+    opacity: 0;
+    scale: 1.5;
+  }
+}
+@keyframes mini-site-action {
+  0%,
+  48%,
+  57%,
+  100% {
+    transform: scale(1);
+  }
+  51% {
+    transform: scale(0.96);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mini-site *,
+  .mini-site[data-active="true"] * {
+    animation: none !important;
+  }
+  .mini-site-before,
+  .mini-site-cursor,
+  .mini-site-click {
+    opacity: 0;
+  }
+  .mini-site-after,
+  .mini-site-result {
+    opacity: 1;
+  }
+}

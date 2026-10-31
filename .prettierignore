@@ -1,0 +1,9 @@
+node_modules
+dist
+.build
+.data
+apps/web/public
+bun.lock
+.agents/skills
+.agents/licenses
+*.md

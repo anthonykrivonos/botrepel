@@ -1,0 +1,359 @@
+/*
+ * BotRepel's design system on Tailwind CSS v4: dark-first and minimal. Tokens live in @theme
+ * (one source: utilities such as bg-canvas, text-fg-muted, border-line, font-display), element
+ * defaults in @layer base, and components style themselves with utilities in TSX. DESIGN.md
+ * records the rules. Tailwind's preflight is left out on purpose: the base layer is the reset,
+ * and preflight's `svg { display: block }` would break inline icons. Fonts are self-hosted
+ * (the CSP allows only font-src 'self'); their @font-face rules are inline in index.html because
+ * Bun's CSS bundler would otherwise base64-inline them into this file.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme {
+  /* Surfaces, darkest to lightest. */
+  --color-canvas: #000000;
+  --color-well: #060608;
+  --color-surface: #0a0a0c;
+  --color-surface-raised: #111113;
+
+  /* Text. */
+  --color-fg: #fcfcfd;
+  --color-fg-body: rgb(252 252 253 / 0.86);
+  --color-fg-muted: rgb(252 252 253 / 0.64);
+  --color-fg-subtle: #8a8f93;
+  --color-fg-disabled: #46494d;
+
+  /* Lines. */
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.14);
+
+  /* State only: never decoration. Each has a wash (background) and a foreground. */
+  --color-ok: #46fea5;
+  --color-ok-wash: rgb(34 255 153 / 0.12);
+  --color-warn: #ffca16;
+  --color-warn-wash: rgb(250 130 0 / 0.13);
+  --color-danger: #ff9592;
+  --color-danger-wash: rgb(255 23 63 / 0.18);
+  --color-info: #70b8ff;
+  --color-info-wash: rgb(0 119 255 / 0.23);
+
+  /* Brand: the heart in the mark, wordmark, and favicon. Nowhere else. */
+  --color-brand: #ff0000;
+
+  /* Y Combinator's orange, only for the hero's alumni chip. */
+  --color-yc: #ff6600;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-game: "Monster Friend Fore", ui-monospace, monospace;
+  --font-playful: "MERCY", ui-monospace, monospace;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Type scale: size with its line height and tracking. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.5rem;
+  --text-xl--line-height: 2rem;
+  --text-xl--letter-spacing: -0.01em;
+  --text-display-sm: 3.5rem;
+  --text-display-sm--line-height: 1.05;
+  --text-display-sm--letter-spacing: -0.02em;
+  --text-display: 5rem;
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.025em;
+
+  --radius-control: 6px;
+  --radius-card: 10px;
+  --radius-dialog: 14px;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-enter: enter 180ms var(--ease-out) both;
+  --animate-rise: rise 900ms var(--ease-out) both;
+  /* The pose ring's bars once the head roll is captured: a crest that circles the ring. */
+  --animate-ring-dance: ring-dance 1000ms ease-in-out infinite;
+
+  /* The hero's entrance on load: a longer rise that comes into focus. */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* One bar's part in the ring's dance: a quick rise past its full length, then rest at the covered length. */
+  @keyframes ring-dance {
+    0%,
+    25%,
+    100% {
+      scale: 1 0.5;
+    }
+    10% {
+      scale: 1 1.3;
+    }
+  }
+}
+
+@utility glow-* {
+  /* A low-opacity radial wash behind a section; color comes from a state token. */
+  background-image: radial-gradient(60% 50% at 50% 0%, --value(--color-*) 0%, transparent 70%);
+}
+
+@utility glow-light {
+  /*
+   * The hero's ambient light: the color LightStage is currently sending, as `--light` (r g b) on
+   * the nearest [data-light] ancestor. Before the canvas runs, it rests on the schedule's green.
+   */
+  background-image:
+    radial-gradient(45% 55% at 72% 45%, rgb(var(--light) / 0.2) 0%, transparent 70%),
+    radial-gradient(60% 40% at 50% 0%, rgb(var(--light) / 0.1) 0%, transparent 70%);
+}
+
+@utility dot-grid {
+  /* The point-cloud texture of the hero face, edge to edge: what glass panes frost on the landing page. */
+  background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+
+@utility dot-field {
+  /* The dot grid as a faint background that fades out at the edges. */
+  @apply dot-grid;
+  mask-image: radial-gradient(55% 60% at 50% 45%, black 0%, transparent 100%);
+}
+
+@utility glass {
+  /* Frosted glass: a translucent pane with a faint top sheen that blurs whatever sits behind it. */
+  background-color: color-mix(in oklab, var(--color-surface) 50%, transparent);
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.015));
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: color-mix(in oklab, var(--color-surface) 92%, transparent);
+  }
+}
+
+@utility border-gradient {
+  /* The hairline that fades toward the bottom, for cards and the code window. */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.05)) border-box;
+}
+
+@utility border-gradient-strong {
+  /* A brighter hairline for the one surface a section wants the eye on (the live demo). */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.06)) border-box;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--color-canvas);
+    color: var(--color-fg-body);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-fg);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+    padding: 0;
+  }
+
+  code,
+  kbd,
+  pre {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: rgb(255 255 255 / 0.2);
+    color: var(--color-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-info);
+    outline-offset: 2px;
+  }
+
+  [data-light] {
+    --light: 40 214 130;
+  }
+
+  /* Scroll reveals (useReveal): only content below the fold is ever hidden, and only once JS runs. */
+  [data-reveal] {
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 500ms var(--ease-out);
+  }
+
+  [data-reveal="hidden"] {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  /* [data-entrance] children rise in one after another on page load: the hero, above the fold. */
+  [data-entrance] > * {
+    animation: var(--animate-rise);
+  }
+
+  [data-entrance] > :nth-child(2) {
+    animation-delay: 90ms;
+  }
+
+  [data-entrance] > :nth-child(3) {
+    animation-delay: 180ms;
+  }
+
+  [data-entrance] > :nth-child(4) {
+    animation-delay: 270ms;
+  }
+
+  [data-entrance] > :nth-child(n + 5) {
+    animation-delay: 360ms;
+  }
+
+  /* Inside a reveal, [data-stagger] children follow one another in. */
+  [data-reveal] [data-stagger] > * {
+    transition:
+      opacity 600ms var(--ease-out),
+      transform 600ms var(--ease-out);
+  }
+
+  [data-reveal="hidden"] [data-stagger] > * {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  [data-stagger] > :nth-child(2) {
+    transition-delay: 70ms;
+  }
+
+  [data-stagger] > :nth-child(3) {
+    transition-delay: 140ms;
+  }
+
+  [data-stagger] > :nth-child(4) {
+    transition-delay: 210ms;
+  }
+
+  [data-stagger] > :nth-child(5) {
+    transition-delay: 280ms;
+  }
+
+  [data-stagger] > :nth-child(6) {
+    transition-delay: 350ms;
+  }
+
+  [data-stagger] > :nth-child(n + 7) {
+    transition-delay: 420ms;
+  }
+
+  /* SVG lines with pathLength="1" and [data-draw] trace themselves in when revealed. */
+  [data-draw] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1400ms var(--ease-out) 200ms;
+  }
+
+  [data-reveal="hidden"] [data-draw] {
+    stroke-dashoffset: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
