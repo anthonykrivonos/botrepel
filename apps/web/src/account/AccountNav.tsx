@@ -8,7 +8,13 @@ interface AccountNavProps {
 
 export function AccountNav({ email }: AccountNavProps): React.JSX.Element {
   return (
-    <header className="border-b border-line">
+    <header className="relative border-b border-line">
+      <a
+        href="#content"
+        className="absolute top-3 left-4 z-20 -translate-y-24 rounded-control bg-fg px-3 py-2 text-sm font-medium text-canvas focus:translate-y-0"
+      >
+        Skip to content
+      </a>
       <nav aria-label="Account" className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4 sm:px-6">
         <a href="/dashboard" aria-label="Dashboard">
           <Logo />

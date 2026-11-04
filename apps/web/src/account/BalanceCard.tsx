@@ -36,7 +36,7 @@ export function BalanceCard(): React.JSX.Element {
     <Card className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <p className="mb-1 text-sm text-fg-subtle">Credit</p>
-        <p className="font-mono text-3xl text-fg">{summary.data ? formatDollars(balance, 4) : "—"}</p>
+        <p className="font-mono text-3xl text-fg">{summary.data ? formatDollars(balance, 4) : "…"}</p>
         {summary.data && balance <= 0 && (
           <div className="mt-2">
             <Badge tone="danger">Out of credit: invisible checks only</Badge>

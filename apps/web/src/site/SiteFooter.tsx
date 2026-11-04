@@ -55,7 +55,7 @@ export function SiteFooter(): React.JSX.Element {
               <Logo className="text-lg" />
             </a>
             <p className="max-w-xs text-sm text-fg-subtle">
-              Human verification for the AI era. No faces stored: liveness clips are analyzed in memory and discarded.
+              Human verification for websites. Light-check frames are analyzed in memory and then discarded.
             </p>
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-4">
@@ -80,7 +80,7 @@ export function SiteFooter(): React.JSX.Element {
         </div>
         <div className="border-t border-line">
           <p className="px-6 py-5 text-xs text-fg-subtle sm:px-8 lg:px-10">
-            © {new Date().getFullYear()} BotRepel. Make the internet human again.
+            © {new Date().getFullYear()} BotRepel. Human verification for websites.
           </p>
         </div>
       </Glass>

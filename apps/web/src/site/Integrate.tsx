@@ -5,14 +5,15 @@ import { Tabs } from "../components/Tabs";
 import { useOrigin } from "../hooks/useOrigin";
 import { agentPrompt } from "../shared/constants";
 
-const REACT = `import { BotRepel } from "botrepel/react";
+const REACT = `"use client";
+import { BotRepel } from "botrepel/react";
 
 export function SignupForm() {
   return (
-    <form method="post" action="/signup">
+    <form action="/api/signup" method="post">
       <input name="email" type="email" required />
-      <BotRepel siteKey={import.meta.env.VITE_BOTREPEL_SITE_KEY} action="signup" />
-      <button>Sign up</button>
+      <BotRepel siteKey={process.env.NEXT_PUBLIC_BOTREPEL_SITE_KEY!} action="signup" />
+      <button type="submit">Sign Up</button>
     </form>
   );
 }`;
@@ -27,7 +28,7 @@ export async function signup(formData: FormData) {
     expectedAction: "signup",
   });
   if (!result.success) {
-    return { error: "Please verify you're human." };
+    return { error: "Verification failed." };
   }
   // Create the account.
 }`;
@@ -66,13 +67,8 @@ export function Integrate(): React.JSX.Element {
     <Section
       id="integrate"
       eyebrow="Integrate"
-      title={
-        <>
-          Get set up in an afternoon with a little{" "}
-          <span className="inline-block font-playful text-[0.9em] tracking-normal">determination</span>
-        </>
-      }
-      lede="Add one component to your form and one check to your server, or let your coding agent do both from one prompt."
+      title="Add the widget and verify the token"
+      lede="Place one component in the form and call verify on the server. A coding agent can follow the install guide from one prompt."
     >
       <Tabs
         label="Integration"
@@ -83,7 +79,10 @@ export function Integrate(): React.JSX.Element {
               <div className="grid gap-4 lg:grid-cols-2">
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-3">
-                    <p className="text-sm text-fg-muted">Paste into Claude Code, Cursor, or Codex.</p>
+                    <p className="text-sm text-fg-muted">
+                      Paste into Claude Code, Cursor, or Codex. The CLI names the public site key for the framework it
+                      detects. Next.js uses NEXT_PUBLIC_, and Vite uses VITE_.
+                    </p>
                     <CopyField value={agentPrompt(origin)} label="Copy prompt" kind="code" />
                   </div>
                   <ol data-stagger className="flex flex-col">
@@ -106,7 +105,7 @@ Open:  ${origin}/device?user_code=…
 Waiting for your approval in the browser…
 
 Created site "example" (localhost, example.com).
-Wrote VITE_BOTREPEL_SITE_KEY and BOTREPEL_SECRET_KEY to .env.local.`}
+Wrote NEXT_PUBLIC_BOTREPEL_SITE_KEY and BOTREPEL_SECRET_KEY to .env.local.`}
                 />
               </div>
             ),

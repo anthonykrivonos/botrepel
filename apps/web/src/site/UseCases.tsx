@@ -31,8 +31,8 @@ export function UseCases(): React.JSX.Element {
     <Section
       id="use-cases"
       width="full"
-      title="Stop abuse before it costs you"
-      lede="Add human verification at the point where abuse becomes expensive."
+      title="Where a check runs"
+      lede="Place a check on the action that creates the cost."
       aside={
         <div className="flex items-center gap-3">
           <p

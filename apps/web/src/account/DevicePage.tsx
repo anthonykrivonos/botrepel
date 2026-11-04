@@ -79,7 +79,10 @@ export function DevicePage(): React.JSX.Element {
                 {({ id, describedBy }) => (
                   <Input
                     id={id}
+                    name="code"
                     aria-describedby={describedBy}
+                    autoComplete="one-time-code"
+                    spellCheck={false}
                     className="text-center font-mono tracking-widest uppercase"
                     value={entered}
                     onChange={(event) => setEntered(event.target.value)}

@@ -1,7 +1,0 @@
-Monster Friend Fore Regular
-Copyright (c) 2015 TheFizzyNator
-
-Source: https://www.dafont.com/monster-friend-fore.font
-Downloaded October 30, 2026. The source lists the font as "100% Free".
-The archive contains MonsterFriendFore.otf and no separate license text.
-Converted to WOFF2 for self-hosting; font names, outlines, and copyright retained.

@@ -82,7 +82,7 @@ export function EvidenceBar(): React.JSX.Element {
     <section ref={ref} aria-labelledby="evidence-title" className="border-y border-line bg-well/60">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <h2 id="evidence-title" className="mb-10 text-center text-sm font-normal text-fg-subtle">
-          Puzzles stopped working. The evidence, from{" "}
+          Cited results on automated CAPTCHA solving, from{" "}
           <a
             href="/research/botrepel-whitepaper.pdf"
             className="text-fg-muted underline underline-offset-4 hover:text-fg"

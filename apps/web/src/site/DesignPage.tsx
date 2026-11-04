@@ -46,7 +46,7 @@ export function DesignPage(): React.JSX.Element {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+      <main id="content" className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <h1 className="mb-2 font-display text-display-sm font-normal">Design system</h1>
         <p className="mb-10 text-fg-muted">Dark first. Color means state. Precision over decoration.</p>
 

@@ -11,7 +11,7 @@ const QUESTIONS: readonly { readonly question: string; readonly answer: string }
   {
     question: "Can a determined attacker still get through?",
     answer:
-      "Yes. Someone with a compromised device and a real-time, physically correct relighting rig could pass a light check. BotRepel makes each pass cost a live person or serious engineering, which breaks mass signup fraud. It isn't identity verification and doesn't claim to stop a funded attacker targeting one account.",
+      "Yes. A person with a compromised device and a real-time relighting setup could pass a light check. The check raises the cost of mass signup fraud. It does not verify identity, and a targeted attack on one account can still succeed.",
   },
   {
     question: "What does a visitor without a camera do?",
@@ -30,7 +30,7 @@ const QUESTIONS: readonly { readonly question: string; readonly answer: string }
   {
     question: "Is the color sequence safe for photosensitive people?",
     answer:
-      "The colors drift slowly, below the 3 Hz flash threshold in WCAG 2.3.1, and the dark dips ramp rather than switch. The widget explains what will happen before the camera starts, with a note for anyone sensitive to light.",
+      "The colors drift slowly and stay below the 3 Hz flash threshold in WCAG 2.3.1. Dark dips fade in and out. The widget explains the check before the camera starts, including a note for people who are sensitive to light.",
   },
 ];
 
@@ -39,7 +39,7 @@ export function Faq(): React.JSX.Element {
     <Section
       id="faq"
       eyebrow="FAQ"
-      title="Questions along the way"
+      title="Common questions"
       lede={
         <>
           Have another question? Email{" "}

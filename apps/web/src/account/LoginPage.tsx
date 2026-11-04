@@ -89,9 +89,11 @@ export function LoginPage(): React.JSX.Element {
         </a>
         <Card className="flex w-full flex-col gap-4">
           <h1 className="text-center text-xl">Sign in</h1>
-          <p className="-mt-2 text-center text-sm text-fg-muted">
-            Sign in with GitHub or Google to start with $5 of free usage.
-          </p>
+          {providers.length > 0 ? (
+            <p className="-mt-2 text-center text-sm text-fg-muted">
+              New accounts that sign in with GitHub or Google receive $5 of usage.
+            </p>
+          ) : null}
           {providers.map((provider) => (
             <Button
               key={provider}
@@ -104,18 +106,16 @@ export function LoginPage(): React.JSX.Element {
           ))}
           {methods.data?.magicLink && (
             <form onSubmit={(event) => void sendLink(event)} className="flex flex-col gap-3">
-              {providers.length > 0 && (
-                <p className="text-center text-xs text-fg-subtle" aria-hidden="true">
-                  or
-                </p>
-              )}
+              {providers.length > 0 && <p className="text-center text-xs text-fg-subtle">or</p>}
               <Field label="Email">
                 {({ id, describedBy }) => (
                   <Input
                     id={id}
+                    name="email"
                     type="email"
                     required
                     autoComplete="email"
+                    spellCheck={false}
                     aria-describedby={describedBy}
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}

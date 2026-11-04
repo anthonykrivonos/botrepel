@@ -103,7 +103,7 @@ export function llmsText(origin: string): string {
   const site = origin || SITE_ORIGIN;
   return `# ${SITE_NAME}
 
-> Make the internet human again. BotRepel provides human verification for websites, with an invisible check for most people, while others use one tap with a Human Pass or a camera check with a two-second color sequence and a head roll.
+> BotRepel checks that a person is present on a website form. Most checks run in the background. Others use a passkey, or a camera sequence with a two-second color change and a head roll.
 
 To add ${SITE_NAME} to your app, paste this into your coding agent:
 

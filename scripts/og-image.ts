@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { chromium } from "@playwright/test";
 import { WORDMARK_HEART, WORDMARK_LETTERS } from "../apps/web/src/components/Logo";
+import { PRICE_MICROS, formatPerThousand } from "../apps/web/src/shared/pricing";
 
 const root = resolve(import.meta.dir, "..");
 const fonts = `file://${root}/apps/web/public/fonts`;
@@ -26,8 +27,8 @@ h1 { font-family: "Instrument Serif"; font-weight: 400; font-size: 112px; line-h
 p { display: flex; justify-content: space-between; font-family: "Geist Mono"; font-size: 22px; color: #8a8f93; }
 </style></head><body><main>
 <div class="brand">${wordmark}</div>
-<h1>Stop AI agents from abusing your site.</h1>
-<p><span>Drop-in verification from $0.50 per 1,000 checks</span><span>botrepel.com</span></p>
+<h1>Human verification for websites</h1>
+<p><span>From ${formatPerThousand(PRICE_MICROS.invisible)} per 1,000 checks</span><span>botrepel.com</span></p>
 </main></body></html>`;
 
 const directory = await mkdtemp(join(tmpdir(), "og-"));

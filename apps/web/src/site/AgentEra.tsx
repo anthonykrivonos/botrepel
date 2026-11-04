@@ -4,16 +4,16 @@ import { glassClassName } from "../components/Glass";
 
 const POINTS = [
   {
-    title: "Agents get stepped up, not waved through",
-    body: "An LLM driving a real browser can click any checkbox. It can't tap a passkey it doesn't hold, or put a live face in front of a screen that changes color on a schedule it has never seen.",
+    title: "Automation signals raise the check",
+    body: "WebDriver, headless browser behavior, and proof of work solved faster than browser JavaScript each add risk. The site policy sets the minimum, and risk can only raise it.",
   },
   {
-    title: "Automation leaves traces",
-    body: "WebDriver flags, DevTools protocol hooks, headless quirks, and proof of work solved faster than any browser can each add risk. Together they trigger a check a script can't pass.",
+    title: "A passkey stays on the device",
+    body: "After one light check, a person can save a Human Pass. Later visits can use that passkey. BotRepel stores the public key and a different pseudonym on each site.",
   },
   {
-    title: "Your agent joins the party",
-    body: "Paste one prompt and your coding agent will read the install guide, run the CLI, and ask you to approve the sign-in. Your keys go in your env file and never appear in chat.",
+    title: "A coding agent can install it",
+    body: "The install guide lists the commands and the files to edit. The CLI writes the keys to the env file. The secret is not included in the guide.",
   },
 ] as const;
 
@@ -21,9 +21,9 @@ export function AgentEra(): React.JSX.Element {
   return (
     <Section
       id="agents"
-      eyebrow="Built for the agent era"
-      title="Agents can solve puzzles, but they can't be people"
-      lede="CAPTCHAs ask for skills software now has, while BotRepel asks for things only a present human has, like a device in hand and a face in the light."
+      eyebrow="Automation"
+      title="Signals, a passkey, or a live face"
+      lede="A clean browser completes a proof of work in the background. Automation signals can raise that visit to a passkey or a camera sequence."
     >
       <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start">
         <ul data-stagger className="flex flex-col">

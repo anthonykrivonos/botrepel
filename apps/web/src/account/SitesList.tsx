@@ -19,8 +19,8 @@ export function SitesList(): React.JSX.Element {
       {sites.data?.length === 0 && (
         <Card>
           <p className="text-fg-muted">
-            There are no sites yet, and you can create your first one here or run{" "}
-            <code className="text-fg">npx botrepel init</code> in your app.
+            There are no sites yet. Create one here, or run <code className="text-fg">npx botrepel init</code> in your
+            app.
           </p>
         </Card>
       )}

@@ -19,8 +19,8 @@ export function Research(): React.JSX.Element {
     <Section
       id="research"
       eyebrow="Research"
-      title="Read how it works, and where it stops."
-      lede="The design, the evidence behind it, and an honest threat model, in an eight-page paper with sources."
+      title="Read how it works, and where it stops"
+      lede="The design, the cited evidence, and the threat model are in an eight-page paper with sources."
     >
       <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
         <a
@@ -33,9 +33,7 @@ export function Research(): React.JSX.Element {
               Proof of a present human on the open web
             </h3>
             <p className="text-sm text-fg-muted">
-              CAPTCHAs no longer separate people from software. We describe a service between CAPTCHAs and identity
-              verification: risk decides who is challenged, and each challenge asks for the cheapest proof the action
-              needs.
+              The paper describes the assurance levels, how risk chooses a check, and which attacks remain possible.
             </p>
           </div>
           <span className="text-sm text-fg-muted transition-colors duration-150 group-hover:text-fg">

@@ -21,7 +21,7 @@ export function HomePage(): React.JSX.Element {
         <RippleDots />
       </div>
       <Nav />
-      <main>
+      <main id="content">
         <Hero />
         <UseCases />
         <EvidenceBar />
