@@ -233,9 +233,9 @@ export function LivenessStep({ livenessId: initialId, onToken, onFail }: Livenes
         <div className="flex max-w-sm flex-col gap-4">
           <h1 className="text-xl">Quick light check</h1>
           <p className="text-sm text-fg-muted">
-            Your screen will change color for two seconds while your camera checks how the light reflects off your face,
-            then you'll roll your head along the ring around the camera. The video is analyzed once and never stored,
-            and it isn't used to identify you.
+            Your screen will change color for two seconds while the camera records how the light reflects off your face.
+            You then roll your head along the ring. The frames are analyzed during the request and then discarded.
+            BotRepel does not use them to recognize you.
           </p>
           <p className="text-xs text-fg-subtle">
             The colors change slowly with no flashing, but skip this if light sensitivity affects you. By continuing,

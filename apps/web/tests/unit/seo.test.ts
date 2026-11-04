@@ -27,6 +27,8 @@ describe("discovery files", () => {
   test("an indexable build lists its pages", () => {
     const files = discoveryFiles({ origin: "https://botrepel.com", indexable: true });
     expect(files["robots.txt"]).toContain("Sitemap: https://botrepel.com/sitemap.xml");
+    expect(files["robots.txt"]).toContain("Disallow: /w/");
+    expect(files["robots.txt"]).toContain("Disallow: /dashboard");
     expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/</loc>");
   });
 
@@ -35,6 +37,9 @@ describe("discovery files", () => {
     expect(head).toContain('<link rel="canonical" href="https://botrepel.com/">');
     expect(head).toContain('content="index, follow"');
     expect(head).toContain('<meta property="og:image" content="https://botrepel.com/og.png">');
+    expect(head).toContain('<meta property="og:image:alt" content="BotRepel, human verification for websites.">');
+    expect(head).toContain('<meta name="twitter:title" content="BotRepel | Human verification for websites">');
+    expect(head).toContain('<meta name="twitter:image" content="https://botrepel.com/og.png">');
     expect(head).toContain('content="summary_large_image"');
   });
 

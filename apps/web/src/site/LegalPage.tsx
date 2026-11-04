@@ -10,7 +10,7 @@ export function LegalPage({ document }: LegalPageProps): React.JSX.Element {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+      <main id="content" className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
         <p className="mb-4 text-sm text-fg-subtle">Last updated {document.updated}</p>
         <h1 className="mb-6 font-display text-display-sm font-normal">{document.title}</h1>
         <p className="mb-12 text-lg text-fg-muted">{document.intro}</p>

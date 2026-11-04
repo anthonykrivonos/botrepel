@@ -26,10 +26,10 @@ export const DOCS: readonly DocSection[] = [
       },
       { code: "npx botrepel init --domain example.com", title: "Terminal" },
       {
-        text: "Your toolkit fits in one package, with the widget (botrepel/react), server checks (botrepel), and integrations for Better Auth, Auth.js, and Auth0. You can add it by hand with npm i botrepel.",
+        text: "The botrepel package includes the widget (botrepel/react), server checks (botrepel), and integrations for Better Auth, Auth.js, and Auth0. Install it with npm i botrepel.",
       },
       {
-        text: "The CLI adds localhost for you, and you should add every other domain the widget runs on. Use *.example.com to cover its subdomains.",
+        text: "The CLI adds localhost, and you should add every other domain the widget runs on. Use *.example.com to cover its subdomains. It also names the public site key for the framework it detects, such as NEXT_PUBLIC_BOTREPEL_SITE_KEY or VITE_BOTREPEL_SITE_KEY.",
       },
     ],
   },

@@ -50,6 +50,8 @@ export function renderHead(page: SitePage, config: SeoConfig): string {
   const title = escapeHtml(documentTitle(page));
   const description = escapeHtml(page.description);
   const url = config.origin ? escapeHtml(absolute(config.origin, page.path)) : "";
+  const image = escapeHtml(absolute(config.origin, "/og.png"));
+  const imageAlt = escapeHtml("BotRepel, human verification for websites.");
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}">`,
@@ -60,10 +62,15 @@ export function renderHead(page: SitePage, config: SeoConfig): string {
     `<meta property="og:title" content="${title}">`,
     `<meta property="og:description" content="${description}">`,
     url ? `<meta property="og:url" content="${url}">` : "",
-    `<meta property="og:image" content="${escapeHtml(absolute(config.origin, "/og.png"))}">`,
+    `<meta property="og:image" content="${image}">`,
     `<meta property="og:image:width" content="1200">`,
     `<meta property="og:image:height" content="630">`,
+    `<meta property="og:image:alt" content="${imageAlt}">`,
     `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta name="twitter:title" content="${title}">`,
+    `<meta name="twitter:description" content="${description}">`,
+    `<meta name="twitter:image" content="${image}">`,
+    `<meta name="twitter:image:alt" content="${imageAlt}">`,
   ].join("");
 }
 
@@ -76,7 +83,22 @@ export function discoveryFiles(config: SeoConfig): Record<string, string> {
         .join("\n")}\n</urlset>\n`
     : undefined;
   const robots = config.indexable
-    ? `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${absolute(config.origin, "/sitemap.xml")}\n`
+    ? [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /api/",
+        "Disallow: /v1/",
+        "Disallow: /w/",
+        "Disallow: /admin/",
+        "Disallow: /dashboard",
+        "Disallow: /device",
+        "Disallow: /login",
+        "Disallow: /pass/",
+        "Disallow: /settings",
+        "",
+        `Sitemap: ${absolute(config.origin, "/sitemap.xml")}`,
+        "",
+      ].join("\n")
     : "User-agent: *\nDisallow: /\n";
   return {
     "robots.txt": robots,

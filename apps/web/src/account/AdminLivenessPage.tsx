@@ -21,13 +21,13 @@ export function AdminLivenessPage(): React.JSX.Element {
   });
 
   if (!account) {
-    return <main aria-busy="true" className="min-h-dvh" />;
+    return <main id="content" aria-busy="true" className="min-h-dvh" />;
   }
   const data = calibration.data;
   return (
     <>
       <AccountNav email={account.email} />
-      <main className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12 sm:px-6">
+      <main id="content" className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12 sm:px-6">
         <header className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-xl">Liveness calibration</h1>

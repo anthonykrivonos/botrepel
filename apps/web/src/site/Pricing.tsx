@@ -7,9 +7,9 @@ import { FREE_CREDIT_MICROS, PRICE_MICROS, formatDollars, formatPerThousand } fr
 import { cn } from "../utils/cn";
 
 const PROVES: Readonly<Record<Assurance, string>> = {
-  invisible: "A real browser did real work. For signups, logins, and forms.",
-  presence: "A person is present on a real device. For posts, votes, and reviews.",
-  liveness: "A live face, right now. For payouts and account recovery.",
+  invisible: "Proof of work and browser signals. Used for signups, logins, and forms.",
+  presence: "A passkey on the visitor's device. Used for posts, votes, and reviews.",
+  liveness: "A live face in front of the screen. Used for payouts and account recovery.",
 };
 
 export function Pricing(): React.JSX.Element {
@@ -17,8 +17,8 @@ export function Pricing(): React.JSX.Element {
     <Section
       id="pricing"
       eyebrow="Pricing"
-      title="Cheap enough for every form"
-      lede="You pay only when your server verifies a token. The price depends on the check it proved, with no minimums or per-seat charges."
+      title="Pay per successful verification"
+      lede="You are charged when your server verifies a token. The price follows the check that token proved."
       aside={<Badge tone="ok">{formatDollars(FREE_CREDIT_MICROS, 0)} free to start</Badge>}
     >
       <ul data-stagger className="grid gap-4 md:grid-cols-3">
@@ -53,8 +53,7 @@ export function Pricing(): React.JSX.Element {
       <figure className={glassClassName("mt-4 p-5 sm:p-6")}>
         <PriceScale />
         <figcaption className="mt-3 border-t border-line pt-3 font-mono text-[11px] text-fg-subtle">
-          FIG. 5 · Dollars per 1,000 checks, log scale. Priced between a CAPTCHA and an ID check, because it proves more
-          than one and far less than the other.
+          FIG. 5 · Dollars per 1,000 checks, log scale.
         </figcaption>
       </figure>
     </Section>

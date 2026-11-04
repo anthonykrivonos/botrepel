@@ -16,15 +16,15 @@ export function ClosingCta(): React.JSX.Element {
       />
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-8 px-4 py-28 text-center sm:px-6 sm:py-36">
         <h2 className="max-w-4xl font-display text-[3.25rem] leading-[1] font-normal tracking-[-0.025em] sm:text-[5.5rem]">
-          Make the internet human again.
+          Add BotRepel to a form
         </h2>
         <p className="max-w-md text-lg text-fg-muted">
-          Get {formatDollars(FREE_CREDIT_MICROS, 0)} of free checks without a card or minimums, and go live in an
-          afternoon.
+          New accounts that sign in with GitHub or Google receive {formatDollars(FREE_CREDIT_MICROS, 0)} of usage. No
+          card is required to create an account.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <a href="/login" className={buttonClassName("primary")}>
-            Get Started
+            Create an Account
           </a>
           <CopyButton
             value={agentPrompt(origin)}

@@ -30,8 +30,8 @@ export const accountPages: readonly SitePage[] = [
 export const pages: readonly SitePage[] = [
   {
     path: "/",
-    title: "Stop AI agents from abusing your site",
-    description: `Drop BotRepel into your forms to keep AI agents and bots out. One line in your form, one call on your server, from ${formatPerThousand(PRICE_MICROS.invisible)} per 1,000 checks.`,
+    title: "Human verification for websites",
+    description: `BotRepel checks that a person is present before a form is accepted. Most checks run in the background. Verified checks start at ${formatPerThousand(PRICE_MICROS.invisible)} per 1,000.`,
     index: true,
   },
   {
@@ -64,6 +64,6 @@ export const pages: readonly SitePage[] = [
 export const notFoundPage: SitePage = {
   path: "/404",
   title: "Page not found",
-  description: "No page at this address. There's still a way home.",
+  description: "This address does not match a page.",
   index: false,
 };

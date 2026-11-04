@@ -19,19 +19,19 @@ export function Layers(): React.JSX.Element {
     <Section
       id="how-it-works"
       eyebrow="How it works"
-      title="One component, three layers"
-      lede="Risk decides who sees a challenge, and your policy decides how strong it must be for each action."
+      title="Three checks, chosen per action"
+      lede="Each action has a minimum check, and risk can only raise it for a visit."
     >
       <ol>
         <LayerRow
           index={1}
           name="Invisible check"
-          title="Most people never see a thing"
-          body="Every visit solves a small proof of work while the widget reads browser signals. Clean visits pass in the background, while suspicious ones do more work and step up."
+          title="The default check runs in the background"
+          body="Each visit solves a small proof of work while the widget reads browser signals. A clean visit finishes without a prompt. A suspicious visit does more work or moves to a stronger check."
           facts={[
-            "17 to 21 bits of work, scaled by risk",
-            "Signals can only add risk, and a bot can't lower its score by lying",
-            "Work done off the browser (GPUs, native code) shows up as an impossible hash rate",
+            "17 to 21 bits of work, scaled by risk.",
+            "Signals can only raise the risk score.",
+            "Work done outside the browser shows up as a hash rate browser JavaScript does not reach.",
           ]}
           caption="Difficulty and step-up by risk score"
           figure={<FigPow />}
@@ -40,12 +40,12 @@ export function Layers(): React.JSX.Element {
           index={2}
           flip
           name="Human Pass"
-          title="One tap, after the first check"
-          body="People who pass a light check can save a passkey. From then on, Face ID, Touch ID, or a fingerprint proves a person is present on a real device."
+          title="A passkey after one light check"
+          body="A person who passes a light check can save a passkey. Later checks can use Face ID, Touch ID, or another platform authenticator."
           facts={[
-            "No email, no account, no face leaves the device",
-            "A different pseudonym on every site, so sites can't link a person",
-            "Human Pass is optional, and visitors can always take a light check instead",
+            "The unlock stays on the device. BotRepel does not ask for a name or an email.",
+            "Each site receives a different pseudonym.",
+            "A visitor can take a light check instead of using a pass.",
           ]}
           caption="One pass, unlinkable pseudonyms (illustrative values)"
           figure={<FigPseudonym />}
@@ -53,12 +53,12 @@ export function Layers(): React.JSX.Element {
         <LayerRow
           index={3}
           name="Flash liveness"
-          title="Light can't be faked in time"
-          body="For the actions that matter most, the screen shows a one-time color sequence for two seconds. A real face reflects it instantly, brighter where it faces the screen. Replays and deepfakes arrive late, flat, or wrong."
+          title="A one-time color sequence"
+          body="For higher-assurance actions, the screen shows a two-second color sequence. The check compares the light reflected from the face with that sequence, including timing."
           facts={[
-            "A new random sequence every time, slow and under 3 Hz, never a strobe",
-            "Checks timing and how each region of the face reflects",
-            "Low-resolution frames analyzed in memory, then discarded",
+            "The sequence is random, slow, and under 3 Hz.",
+            "The check uses timing and how each region of the face reflects.",
+            "Low-resolution frames are analyzed in memory and then discarded.",
           ]}
           caption="Sent light and its reflection (lag exaggerated)"
           figure={<FigSchedule />}

@@ -22,22 +22,18 @@ Human verification for websites in the AI era.
 
 ## Copy
 
-- Write like a capable, kind narrator who notices concrete details and offers quiet encouragement with occasional dry humor. Take inspiration from Undertale's narration, signs, and clear menus while keeping BotRepel credible to enterprise buyers and welcoming to developers. Every line must work for someone who has never played.
-- Let sentences flow naturally, and connect related thoughts with words such as "and", "but", "while", and "so". Longer sentences are welcome when they read well, including constructions like "This is X, and that is Y." Avoid deliberately clipped prose, strings of fragments, or making sentences short for its own sake. Use semicolons and colon-led explanations sparingly, keeping colons where they help with labels or code examples. Do not use em dashes in prose.
-- Keep "Make the internet human again." exactly as written.
-- Let marketing, onboarding, empty states, and successful setup carry the most personality. Use at most one conspicuous playful beat per screen or marketing section. Small allusions to determination or joining a party are welcome when they fit, but should not become recurring catchphrases. An aside must be removable without losing essential information.
+- Write public copy in short, complete sentences. Keep it objective and neutral. State what the product does, what it stores, what it costs, and what the reader can do next.
+- Do not use marketing slogans or playful asides. Do not use em dashes. Do not use contrast formulas such as "It is X, not Y" or "not just X, but Y". When a limit matters, give it its own sentence.
 - Preserve every fact, qualification, number, prerequisite, consequence, and available next step, and keep technical terms consistent. Distinguish liveness from identity and capture from approval, and remember that creating keys does not mean installation is complete. Never invent progress, remembered visits, user emotions, or protection the current state does not establish.
 - Keep verification instructions, consent, privacy, payments, secrets, destructive actions, and failure recovery calm and literal. State the problem and the available recovery. Never joke about failed verification or imply that a visitor is less human.
-- Keep controls and accessible labels specific to their actions. Preserve provider wording, commands, code examples, routes, API fields, error codes, exported SDK errors, and structured-output shapes. Human-readable CLI and developer prose can have warmth while keeping technical instructions exact.
-- Borrow storytelling techniques without impersonating characters or copying dialogue. Avoid all-caps or lowercase personas, intentional misspellings, dialogue asterisks, excessive ellipses, and forced game references.
-- Apply this voice when adding or changing customer-facing copy, including public docs, metadata, and transactional emails. Leave legal policies, research, internal engineering docs, licenses, and third-party wording unchanged unless explicitly asked. Keep already-effective copy and avoid sweeping unrelated text into a task.
-- Omit generic introductions, repeated explanations, and unnecessary implementation details. Use sentence-case headings without trailing periods and title case for buttons and button-styled links. Keep provider labels such as "Continue with Google" and "Continue with GitHub" verbatim.
+- Keep controls and accessible labels specific to their actions. Preserve provider wording, commands, code examples, routes, API fields, error codes, exported SDK errors, and structured-output shapes.
+- Apply this voice when adding or changing customer-facing copy, including public docs, metadata, and transactional emails. Leave legal policies, research, internal engineering docs, licenses, and third-party wording unchanged unless explicitly asked.
 
-Calibrate the voice with these examples:
+Examples:
 
-- For an empty state, write "There are no sites yet, and you can create your first one here or run `npx botrepel init` in your app."
-- Keep "Page not found" and the literal "Go Home" action, with an optional aside such as "You found an empty room, but there's still a way home."
-- Keep the secret reveal instruction "Copy it now. It won't be shown again. Keep it on your server." Brief security instructions and action labels can stay brief when that makes them easier to use.
+- Empty state: "There are no sites yet. Create one here, or run `npx botrepel init` in your app."
+- Missing page: heading "Page not found", body "This address does not match a page.", action "Go Home".
+- Secret reveal: "Copy it now. It won't be shown again. Keep it on your server."
 
 ## Verification and delivery
 

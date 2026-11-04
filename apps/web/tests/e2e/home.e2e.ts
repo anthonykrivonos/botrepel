@@ -10,7 +10,7 @@ test("the home page renders, offers a prompt for this server, and fits the scree
   });
   await page.goto("/");
   await expect(page).toHaveTitle(/BotRepel/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Stop AI agents from abusing your site.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Human verification for websites");
   await expect(page.getByText(`Follow ${E2E_ORIGIN}/install.md`).first()).toBeVisible();
   // The live demo mounts after hydration with the real widget.
   await expect(page.getByRole("radio", { name: /Flash liveness/ })).toBeChecked();

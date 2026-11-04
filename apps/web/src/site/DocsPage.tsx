@@ -38,13 +38,25 @@ export function DocsPage(): React.JSX.Element {
             ))}
           </ul>
         </nav>
-        <main className="flex max-w-3xl min-w-0 flex-1 flex-col gap-16">
+        <main id="content" className="flex max-w-3xl min-w-0 flex-1 flex-col gap-16">
           <header className="flex flex-col gap-4">
             <h1 className="font-display text-display-sm font-normal">Docs</h1>
             <p className="text-lg text-fg-muted">
               Add BotRepel to a form, verify the token on your server, and choose how much proof each action needs.
             </p>
           </header>
+          <details className="rounded-card border border-line px-4 py-3 lg:hidden">
+            <summary className="cursor-pointer text-sm font-medium text-fg">On this page</summary>
+            <ul className="mt-3 flex flex-col gap-2">
+              {DOCS.map((section) => (
+                <li key={section.id}>
+                  <a href={`#${section.id}`} className="text-sm text-fg-muted hover:text-fg">
+                    {section.heading}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
           {DOCS.map((section) => (
             <section key={section.id} id={section.id} className="flex scroll-mt-24 flex-col gap-4">
               <h2 className="text-xl">{section.heading}</h2>

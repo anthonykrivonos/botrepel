@@ -6,9 +6,7 @@ Tokens live in `apps/web/src/styles.css` (`@theme`). Primitives live in `apps/we
 
 ## Rules
 
-- **Write like a capable, kind narrator** with occasional dry humor and small Undertale nods on low-stakes surfaces.
-  Let connected sentences flow naturally, including longer ones, and use semicolons and colon-led explanations sparingly.
-  Do not use em dashes in prose, and follow [AGENTS.md's copy rules](AGENTS.md#copy) for tone, protected wording, and meaning preservation.
+- **Write in short, neutral sentences.** Follow [AGENTS.md's copy rules](AGENTS.md#copy). Do not use em dashes, slogans, or contrast formulas.
 - **Color means state, never decoration.** `ok` = verified or passed, `warn` = pending or low
   credit, `danger` = failed or irreversible, `info` = links, focus, informational. Everything else
   is black, white, and grays. Exceptions: `brand` red belongs to the heart in the mark,
@@ -26,9 +24,6 @@ Tokens live in `apps/web/src/styles.css` (`@theme`). Primitives live in `apps/we
   guidelines require.
 - **The serif is for display only.** Use `font-display` (Instrument Serif) for hero lines and
   section titles, at weight 400. Never bold it, and never use it in dense product UI.
-- **Pixel type is a small accent.** `font-game` is Monster Friend Fore Regular;
-  `font-playful` is MERCY Regular, used for "determination" in the integration heading.
-  Scale accents to fit the surrounding serif and keep each word intact on small screens.
 - **Monospace is for code, copyable agent prompts, keys, and numbers in tables,** plus the small uppercase labels that
   frame content: section eyebrows, `FIG. n` captions, and sources. Never for titles or body prose.
 - **One primary button per view.** Primary is white with black text; everything else is
@@ -62,12 +57,9 @@ Tokens live in `apps/web/src/styles.css` (`@theme`). Primitives live in `apps/we
 | Heading | Inter 500 | `text-xl` 24/32 |
 | Body | Inter 400 | `text-lg` 18/28, `text-base` 16/24, `text-sm` 14/20 |
 | Code | Geist Mono | 13–14 |
-| Game accent | Monster Friend Fore 400 | About 55–58% of the surrounding display size |
-| Playful accent | MERCY Regular 400 | About 90% of the surrounding display size |
 
 All fonts are self-hosted in `apps/web/public/fonts/`. Inter, Instrument Serif, and Geist Mono are
-OFL; pixel font sources and copyrights are recorded in their accompanying notices. MERCY's
-published license is non-commercial; commercial publication requires separate permission.
+OFL.
 Their `@font-face` rules are inline
 in `src/index.html`, because Bun's CSS bundler would base64-inline them. That inline block is
 allowed by a CSP hash in `vercel.json`, and `build.ts` fails if they drift apart.

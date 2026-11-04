@@ -26,7 +26,7 @@ export function SettingsPage(): React.JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   if (!account) {
-    return <main aria-busy="true" className="min-h-dvh" />;
+    return <main id="content" aria-busy="true" className="min-h-dvh" />;
   }
 
   const deleteAccount = async (): Promise<void> => {
@@ -47,7 +47,7 @@ export function SettingsPage(): React.JSX.Element {
   return (
     <>
       <AccountNav email={account.email} />
-      <main className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 sm:px-6">
+      <main id="content" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 sm:px-6">
         <h1 className="font-display text-[2.5rem] leading-tight font-normal">Settings</h1>
 
         <Card className="flex flex-col gap-4">
@@ -91,8 +91,8 @@ export function SettingsPage(): React.JSX.Element {
         <Card className="flex flex-col gap-4">
           <h2 className="text-base">Delete account</h2>
           <p className="text-sm text-fg-muted">
-            Deletes your sites, keys, credit, and usage. Widgets using your site keys stop working immediately. This
-            can't be undone, and remaining credit isn't refunded.
+            This deletes your sites, keys, credit, and usage. Widgets that use those site keys stop working immediately.
+            Deletion is permanent. Remaining credit is not refunded.
           </p>
           <div>
             <Button variant="danger" onClick={() => setDeleting(true)}>
