@@ -16,7 +16,17 @@ test.describe("accessibility", () => {
   // Scroll-reveal sections start transparent; reduced motion shows everything, so axe sees final colors.
   test.use({ colorScheme: "dark", reducedMotion: "reduce" });
 
-  for (const path of ["/", "/docs", "/login", "/privacy", "/terms", "/dpa"]) {
+  for (const path of [
+    "/",
+    "/docs",
+    "/about",
+    "/articles",
+    "/articles/botrepel-vs-recaptcha",
+    "/login",
+    "/privacy",
+    "/terms",
+    "/dpa",
+  ]) {
     test(`${path} has no WCAG AA violations`, async ({ page }) => {
       await page.goto(path);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

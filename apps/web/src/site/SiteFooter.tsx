@@ -1,3 +1,4 @@
+import { ARTICLES } from "./articles";
 import { Glass } from "../components/Glass";
 import { Logo } from "../components/Logo";
 import { CONTACT_EMAIL } from "../shared/constants";
@@ -14,6 +15,7 @@ const COLUMNS: readonly { readonly title: string; readonly links: readonly Foote
       { href: "/#how-it-works", label: "How it works" },
       { href: "/#pricing", label: "Pricing" },
       { href: "/#faq", label: "FAQ" },
+      { href: "/about", label: "About" },
       { href: "/dashboard", label: "Dashboard" },
     ],
   },
@@ -57,6 +59,19 @@ export function SiteFooter(): React.JSX.Element {
             <p className="max-w-xs text-sm text-fg-subtle">
               Human verification for websites. Light-check frames are analyzed in memory and then discarded.
             </p>
+            <h2 className="text-sm font-medium text-fg">Articles</h2>
+            <ul className="flex flex-col gap-2">
+              {ARTICLES.map((article) => (
+                <li key={article.path}>
+                  <a
+                    href={article.path}
+                    className="text-sm text-fg-subtle transition-colors duration-150 hover:text-fg"
+                  >
+                    {article.heading}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {COLUMNS.map((column) => (

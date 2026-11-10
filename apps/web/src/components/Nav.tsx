@@ -13,6 +13,8 @@ const LINKS: readonly NavLink[] = [
   { href: "/#research", label: "Research" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/docs", label: "Docs" },
+  { href: "/articles", label: "Articles" },
+  { href: "/about", label: "About" },
 ];
 
 export function Nav(): React.JSX.Element {

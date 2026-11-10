@@ -1,3 +1,4 @@
+import { ARTICLES } from "./articles";
 import botrepelPackage from "../../../../packages/botrepel/package.json";
 import { GUIDE_IDS, guideFor, guideMarkdown } from "../../../../packages/botrepel/src/cli/guides";
 import { SITE_NAME, SITE_ORIGIN, agentPrompt } from "../shared/constants";
@@ -113,6 +114,8 @@ To add ${SITE_NAME} to your app, paste this into your coding agent:
 
 - [Install with a coding agent](${absolute(site, "/install.md")}): the CLI, the widget, server verification, and Better Auth, Auth.js, Auth0, Clerk, and Supabase setups
 - [Docs](${absolute(site, "/docs")}): widget props, siteverify fields, error codes, assurance levels, and the security model
+- [About](${absolute(site, "/about")}): prices, retention, and check limits
+- [Articles](${absolute(site, "/articles")}): ${ARTICLES.map((article) => article.heading).join("; ")}
 - [Dashboard](${absolute(site, "/dashboard")}): sites, keys, checks per action, usage
 
 ## API

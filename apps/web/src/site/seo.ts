@@ -1,6 +1,7 @@
 import type { SitePage } from "./content";
 import { pages } from "./content";
 import { installMarkdown, llmsText } from "./install";
+import { renderJsonLd } from "./jsonld";
 import { canonicalOrigin, type EnvSource, isLoopbackHost, isPreviewDeployment, readEnv } from "../../lib/env";
 import { SITE_NAME } from "../shared/constants";
 import { absolute, escapeHtml } from "../shared/utils";
@@ -42,7 +43,7 @@ export function resolveSeoConfig(source?: EnvSource): SeoConfig {
 }
 
 export function documentTitle(page: SitePage): string {
-  return page.path === "/" ? `${SITE_NAME} | ${page.title}` : `${page.title} | ${SITE_NAME}`;
+  return `${page.title} | ${SITE_NAME}`;
 }
 
 /** Replaces the shell's <title>: title, description, robots, canonical, and social cards. */
@@ -71,6 +72,7 @@ export function renderHead(page: SitePage, config: SeoConfig): string {
     `<meta name="twitter:description" content="${description}">`,
     `<meta name="twitter:image" content="${image}">`,
     `<meta name="twitter:image:alt" content="${imageAlt}">`,
+    renderJsonLd(page, config.origin),
   ].join("");
 }
 
@@ -79,7 +81,11 @@ export function discoveryFiles(config: SeoConfig): Record<string, string> {
   const indexed = pages.filter((page) => page.index);
   const sitemap = config.origin
     ? `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexed
-        .map((page) => `  <url><loc>${escapeHtml(absolute(config.origin, page.path))}</loc></url>`)
+        .map((page) => {
+          const loc = escapeHtml(absolute(config.origin, page.path));
+          const lastmod = page.updated ? `<lastmod>${page.updated}</lastmod>` : "";
+          return `  <url><loc>${loc}</loc>${lastmod}</url>`;
+        })
         .join("\n")}\n</urlset>\n`
     : undefined;
   const robots = config.indexable

@@ -1,7 +1,15 @@
 import { describe, expect, test } from "bun:test";
-import { pages } from "../../src/site/content";
+import { createElement } from "react";
+import { renderToString } from "react-dom/server";
+import { MAX_ATTEMPTS } from "../../lib/liveness/flow";
+import { RETENTION } from "../../lib/purge";
+import { App } from "../../src/App";
+import { ARTICLES } from "../../src/site/articles";
+import { pages, HOME_HEADING } from "../../src/site/content";
+import { FACT_LIMITS } from "../../src/site/facts";
 import { installMarkdown } from "../../src/site/install";
-import { discoveryFiles, renderHead, resolveSeoConfig } from "../../src/site/seo";
+import { validateStructuredData } from "../../src/site/jsonld";
+import { discoveryFiles, documentTitle, escapeHtml, renderHead, resolveSeoConfig } from "../../src/site/seo";
 
 describe("resolveSeoConfig", () => {
   test("indexes only a production HTTPS origin", () => {
@@ -30,6 +38,12 @@ describe("discovery files", () => {
     expect(files["robots.txt"]).toContain("Disallow: /w/");
     expect(files["robots.txt"]).toContain("Disallow: /dashboard");
     expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/</loc>");
+    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/about</loc><lastmod>2026-11-10</lastmod>");
+    expect(files["sitemap.xml"]).toContain(
+      "<loc>https://botrepel.com/articles/botrepel-vs-recaptcha</loc><lastmod>2026-11-10</lastmod>",
+    );
+    expect(files["robots.txt"]).not.toContain("Disallow: /articles");
+    expect(files["robots.txt"]).not.toContain("Disallow: /about");
   });
 
   test("the head escapes and canonicalizes", () => {
@@ -38,7 +52,8 @@ describe("discovery files", () => {
     expect(head).toContain('content="index, follow"');
     expect(head).toContain('<meta property="og:image" content="https://botrepel.com/og.png">');
     expect(head).toContain('<meta property="og:image:alt" content="BotRepel, human verification for websites.">');
-    expect(head).toContain('<meta name="twitter:title" content="BotRepel | Human verification for websites">');
+    expect(head).toContain(`<meta name="twitter:title" content="${documentTitle(pages[0]!)}">`);
+    expect(head).toContain('<script type="application/ld+json">');
     expect(head).toContain('<meta name="twitter:image" content="https://botrepel.com/og.png">');
     expect(head).toContain('content="summary_large_image"');
   });
@@ -47,6 +62,70 @@ describe("discovery files", () => {
     const files = discoveryFiles({ origin: "https://botrepel.com", indexable: true });
     expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/privacy</loc>");
     expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/terms</loc>");
+  });
+});
+
+const DAY_MS = 24 * 60 * 60_000;
+
+describe("indexable pages", () => {
+  const indexed = pages.filter((page) => page.index);
+  const config = { origin: "https://botrepel.com", indexable: true } as const;
+
+  test("titles, descriptions, and a single H1 are present in prerendered HTML", () => {
+    for (const page of indexed) {
+      const title = documentTitle(page);
+      expect(title.length, title).toBeGreaterThanOrEqual(50);
+      expect(title.length, title).toBeLessThanOrEqual(60);
+      expect(title.endsWith(" | BotRepel"), title).toBe(true);
+      expect(title, page.path).not.toBe(page.heading);
+      expect(title.includes("—") || page.description.includes("—") || page.heading.includes("—")).toBe(false);
+      expect(page.description.length, page.path).toBeLessThanOrEqual(155);
+      expect(page.description.toLowerCase(), page.path).toContain("human verification");
+      const head = renderHead(page, config);
+      expect(head).toContain(`<title>${title}</title>`);
+      expect(head).toContain(`<meta name="description" content="${escapeHtml(page.description)}">`);
+      const html = renderToString(createElement(App, { path: page.path }));
+      expect(html.match(/<h1\b/g)?.length ?? 0, page.path).toBe(1);
+      expect(html, page.path).toContain(`>${page.heading}<`);
+    }
+  });
+
+  test("JSON-LD matches the schema.org types this site emits", () => {
+    for (const page of indexed) {
+      const head = renderHead(page, config);
+      const json = head.match(/<script type="application\/ld\+json">(.*?)<\/script>/)?.[1];
+      expect(json, page.path).toBeTruthy();
+      const errors = validateStructuredData(JSON.parse(json ?? ""), {
+        faq: page.kind === "home",
+        article: page.kind === "article",
+      });
+      expect(errors, page.path).toEqual([]);
+    }
+  });
+
+  test("article URLs are semantic slugs and comparisons cite a public source", () => {
+    expect(indexed.some((page) => page.path === "/articles")).toBe(true);
+    for (const article of ARTICLES) {
+      expect(article.path).toBe(`/articles/${article.slug}`);
+      expect(article.slug).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+      expect(article.sources.length).toBeGreaterThan(0);
+      if (article.slug.startsWith("botrepel-vs-")) {
+        expect(article.sources.some((source) => source.href.startsWith("https://"))).toBe(true);
+      }
+    }
+    expect(HOME_HEADING.startsWith("BotRepel is a ")).toBe(true);
+    expect(HOME_HEADING).toContain(" that ");
+    expect(HOME_HEADING).toContain(", so ");
+  });
+});
+
+describe("published figures", () => {
+  test("match the server constants", () => {
+    expect(FACT_LIMITS.lightCheckAttempts).toBe(MAX_ATTEMPTS);
+    expect(FACT_LIMITS.scoreRetentionDays * DAY_MS).toBe(RETENTION.livenessStats);
+    expect(FACT_LIMITS.reportRetentionDays * DAY_MS).toBe(RETENTION.reports);
+    expect(FACT_LIMITS.expiredRetentionDays * DAY_MS).toBe(RETENTION.expired);
+    expect(FACT_LIMITS.rateLimitRetentionHours * 60 * 60_000).toBe(RETENTION.rateLimit);
   });
 });
 

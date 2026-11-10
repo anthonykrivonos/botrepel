@@ -9,6 +9,7 @@ Human verification for websites in the AI era.
 - Finish the requested change without unrelated cleanup. Inspect existing code first; preserve other agents' work. Make routine decisions yourself and ask only when ambiguity materially changes the result.
 - Use Bun for dependencies, scripts, builds, and tests. Follow the installed versions, ESLint, and Prettier; prefer platform APIs and existing dependencies.
 - Read only relevant topic docs in [docs/knowledge/](docs/knowledge/). Read [liveness research](docs/knowledge/liveness-research.md) before work on verification, camera capture, the threat model, or biometric privacy.
+- Public-site SEO follows [.cursor/skills/seo/SKILL.md](.cursor/skills/seo/SKILL.md).
 
 ## Code and design
 

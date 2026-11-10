@@ -11,7 +11,7 @@ export function SitesList(): React.JSX.Element {
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg">Sites</h2>
+        <h1 className="text-lg">Sites</h1>
         <Button size="sm" onClick={() => setCreating(true)}>
           New Site
         </Button>

@@ -3,7 +3,14 @@ import { FREE_CREDIT_MICROS, formatDollars } from "../shared/pricing";
 
 /** The legal operator of the service. */
 export const OPERATOR = "Paraworks LLC";
-export const OPERATOR_ADDRESS = "87-20 63rd Ave, Rego Park, NY 11374";
+export const OPERATOR_POSTAL = {
+  streetAddress: "87-20 63rd Ave",
+  addressLocality: "Rego Park",
+  addressRegion: "NY",
+  postalCode: "11374",
+  addressCountry: "US",
+} as const;
+export const OPERATOR_ADDRESS = `${OPERATOR_POSTAL.streetAddress}, ${OPERATOR_POSTAL.addressLocality}, ${OPERATOR_POSTAL.addressRegion} ${OPERATOR_POSTAL.postalCode}`;
 
 export interface LegalSection {
   readonly heading: string;

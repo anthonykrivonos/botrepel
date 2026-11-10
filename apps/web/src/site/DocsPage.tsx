@@ -1,3 +1,4 @@
+import { pageByPath } from "./content";
 import { DOCS, type DocBlock } from "./docs";
 import { SiteFooter } from "./SiteFooter";
 import { CodeBlock } from "../components/CodeBlock";
@@ -40,7 +41,7 @@ export function DocsPage(): React.JSX.Element {
         </nav>
         <main id="content" className="flex max-w-3xl min-w-0 flex-1 flex-col gap-16">
           <header className="flex flex-col gap-4">
-            <h1 className="font-display text-display-sm font-normal">Docs</h1>
+            <h1 className="font-display text-display-sm font-normal">{pageByPath("/docs")!.heading}</h1>
             <p className="text-lg text-fg-muted">
               Add BotRepel to a form, verify the token on your server, and choose how much proof each action needs.
             </p>

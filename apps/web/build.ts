@@ -99,7 +99,9 @@ const shell = (await Bun.file(new URL("index.html", directory)).text()).replace(
 assertInlineStylesAllowed(shell);
 for (const page of [...pages, ...accountPages, notFoundPage]) {
   const filename = page.path === "/" ? "index.html" : `${page.path.slice(1)}.html`;
-  await Bun.write(new URL(filename, directory), renderDocument(shell, page, seo));
+  const target = new URL(filename, directory);
+  await mkdir(new URL("./", target), { recursive: true });
+  await Bun.write(target, renderDocument(shell, page, seo));
 }
 for (const [filename, content] of Object.entries(discoveryFiles(seo))) {
   await Bun.write(new URL(filename, directory), content);
