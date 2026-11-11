@@ -95,7 +95,7 @@ export const pages: readonly SitePage[] = [
     path: "/",
     title: "Human verification widget for web forms",
     description: `Add human verification to a website form. Invisible checks are ${formatPerThousand(PRICE_MICROS.invisible)} per 1,000 successful verifications. Each token works once for five minutes.`,
-    heading: HOME_HEADING,
+    heading: "Human verification for websites",
     index: true,
     updated: CONTENT_UPDATED,
     kind: "home",

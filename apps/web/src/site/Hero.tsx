@@ -36,14 +36,10 @@ export function Hero(): React.JSX.Element {
               Built by YC Alums
             </span>
           </div>
-          <h1 className="max-w-lg text-lg text-fg">{HOME_HEADING}</h1>
-          <h2 className="font-display text-display-sm font-normal text-fg sm:text-display lg:text-[5.75rem] lg:leading-[0.94]">
+          <h1 className="font-display text-display-sm font-normal text-fg sm:text-display lg:text-[5.75rem] lg:leading-[0.94]">
             Human verification for websites
-          </h2>
-          <p className="max-w-lg text-lg text-fg-muted">
-            The widget runs in your form, and your server verifies the token. Most visitors pass a background check. A
-            stepped-up visit uses a passkey or a two-second camera sequence.
-          </p>
+          </h1>
+          <p className="max-w-lg text-lg text-fg-muted">{HOME_HEADING}</p>
           <div className="flex flex-wrap gap-3">
             <a href="/login" className={buttonClassName("primary")}>
               Create an Account
