@@ -51,8 +51,8 @@ export function renderHead(page: SitePage, config: SeoConfig): string {
   const title = escapeHtml(documentTitle(page));
   const description = escapeHtml(page.description);
   const url = config.origin ? escapeHtml(absolute(config.origin, page.path)) : "";
-  const image = escapeHtml(absolute(config.origin, "/og.png"));
-  const imageAlt = escapeHtml("BotRepel, human verification for websites.");
+  const image = escapeHtml(absolute(config.origin, page.image ?? "/og.png"));
+  const imageAlt = escapeHtml(page.imageAlt ?? "BotRepel, human verification for websites.");
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}">`,

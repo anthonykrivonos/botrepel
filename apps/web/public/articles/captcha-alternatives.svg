@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8f93"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#0a0a0c"/>
+  
+  <g>
+        <rect x="40" y="180" width="270" height="144" rx="12" fill="#111113" stroke="#ffca16" stroke-width="2"/>
+        <text x="60" y="220" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Puzzle</text>
+        <text x="60" y="258" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Transcribe text</text><text x="60" y="284" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">or pick images</text>
+      </g><g>
+        <rect x="340" y="180" width="270" height="144" rx="12" fill="#111113" stroke="#70b8ff" stroke-width="2"/>
+        <text x="360" y="220" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">reCAPTCHA v3</text>
+        <text x="360" y="258" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Returns a score.</text><text x="360" y="284" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">No task for the visitor.</text>
+      </g><g>
+        <rect x="640" y="180" width="270" height="144" rx="12" fill="#111113" stroke="#70b8ff" stroke-width="2"/>
+        <text x="660" y="220" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Turnstile</text>
+        <text x="660" y="258" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Can run with no prompt.</text><text x="660" y="284" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">WCAG claim is Cloudflare's.</text>
+      </g><g>
+        <rect x="940" y="160" width="220" height="144" rx="12" fill="#111113" stroke="#46fea5" stroke-width="2"/>
+        <text x="960" y="200" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">BotRepel</text>
+        <text x="960" y="238" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Token names invisible,</text><text x="960" y="264" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">presence, or liveness</text>
+      </g>
+</svg>

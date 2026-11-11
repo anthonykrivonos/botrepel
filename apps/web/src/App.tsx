@@ -7,9 +7,10 @@ import { SettingsPage } from "./account/SettingsPage";
 import { AboutPage } from "./site/AboutPage";
 import { ArticlePage } from "./site/ArticlePage";
 import { articleByPath } from "./site/articles";
-import { ArticlesPage } from "./site/ArticlesPage";
+import { ArticlesPage, GuideHubPage, GuidesPage } from "./site/ArticlesPage";
 import { DesignPage } from "./site/DesignPage";
 import { DocsPage } from "./site/DocsPage";
+import { hubByPath } from "./site/guides/hubs";
 import { HomePage } from "./site/HomePage";
 import { DPA, PRIVACY, TERMS } from "./site/legal";
 import { LegalPage } from "./site/LegalPage";
@@ -41,6 +42,8 @@ export function App({ path }: AppProps): React.JSX.Element {
       return <AboutPage />;
     case "/articles":
       return <ArticlesPage />;
+    case "/guides":
+      return <GuidesPage />;
     case "/privacy":
       return <LegalPage document={PRIVACY} />;
     case "/dpa":
@@ -50,6 +53,10 @@ export function App({ path }: AppProps): React.JSX.Element {
     case "/design":
       return <DesignPage />;
     default: {
+      const hub = hubByPath(path);
+      if (hub) {
+        return <GuideHubPage hubSlug={hub.slug} />;
+      }
       const article = articleByPath(path);
       return article ? <ArticlePage article={article} /> : <Missing />;
     }

@@ -1,4 +1,6 @@
 import { ARTICLES } from "./articles";
+import { GUIDE_UPDATED } from "./guide-facts";
+import { HUBS } from "./guides/hubs";
 import { PRICE_MICROS, formatPerThousand } from "../shared/pricing";
 
 export type PageKind = "home" | "page" | "article";
@@ -15,6 +17,9 @@ export interface SitePage {
   /** Sitemap lastmod, YYYY-MM-DD. */
   readonly updated?: string;
   readonly kind: PageKind;
+  /** Path to a social image. Defaults to /og.png. */
+  readonly image?: string;
+  readonly imageAlt?: string;
 }
 
 /** Date of the public copy used for sitemap lastmod. */
@@ -118,13 +123,34 @@ export const pages: readonly SitePage[] = [
   {
     path: "/articles",
     title: "Guides to human verification for website forms",
-    description:
-      "Read guides to human verification and comparisons of BotRepel with reCAPTCHA, hCaptcha, and Cloudflare Turnstile.",
+    description: "Read guides on blocking bots, stopping fake signups, and human verification for website forms.",
     heading: "Articles",
     index: true,
-    updated: CONTENT_UPDATED,
+    updated: GUIDE_UPDATED,
     kind: "page",
   },
+  {
+    path: "/guides",
+    title: "Guides to blocking bots on website forms",
+    description: "Read guides on blocking bots, stopping fake signups, and adding human verification to website forms.",
+    heading: "Guides",
+    index: true,
+    updated: GUIDE_UPDATED,
+    kind: "page",
+    image: "/articles/og/guides.png",
+    imageAlt: "Three guide groups: block bots, stop fake accounts, and compare captcha alternatives.",
+  },
+  ...HUBS.map((hub): SitePage => ({
+    path: hub.path,
+    title: hub.title,
+    description: hub.description,
+    heading: hub.heading,
+    index: true,
+    updated: hub.updated,
+    kind: "page",
+    image: hub.ogImage,
+    imageAlt: hub.ogAlt,
+  })),
   ...ARTICLES.map((article): SitePage => ({
     path: article.path,
     title: article.title,
@@ -133,6 +159,8 @@ export const pages: readonly SitePage[] = [
     index: true,
     updated: article.updated,
     kind: "article",
+    image: article.ogImage,
+    imageAlt: article.ogAlt,
   })),
   {
     path: "/privacy",

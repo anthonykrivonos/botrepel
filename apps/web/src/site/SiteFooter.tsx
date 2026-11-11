@@ -1,4 +1,4 @@
-import { ARTICLES } from "./articles";
+import { HUBS } from "./guides/hubs";
 import { Glass } from "../components/Glass";
 import { Logo } from "../components/Logo";
 import { CONTACT_EMAIL } from "../shared/constants";
@@ -59,18 +59,25 @@ export function SiteFooter(): React.JSX.Element {
             <p className="max-w-xs text-sm text-fg-subtle">
               Human verification for websites. Light-check frames are analyzed in memory and then discarded.
             </p>
-            <h2 className="text-sm font-medium text-fg">Articles</h2>
+            <h2 className="text-sm font-medium text-fg">Guides</h2>
             <ul className="flex flex-col gap-2">
-              {ARTICLES.map((article) => (
-                <li key={article.path}>
-                  <a
-                    href={article.path}
-                    className="text-sm text-fg-subtle transition-colors duration-150 hover:text-fg"
-                  >
-                    {article.heading}
+              <li>
+                <a href="/guides" className="text-sm text-fg-subtle transition-colors duration-150 hover:text-fg">
+                  All guides
+                </a>
+              </li>
+              {HUBS.map((hub) => (
+                <li key={hub.path}>
+                  <a href={hub.path} className="text-sm text-fg-subtle transition-colors duration-150 hover:text-fg">
+                    {hub.heading}
                   </a>
                 </li>
               ))}
+              <li>
+                <a href="/articles" className="text-sm text-fg-subtle transition-colors duration-150 hover:text-fg">
+                  All articles
+                </a>
+              </li>
             </ul>
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-4">

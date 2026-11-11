@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8f93"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#0a0a0c"/>
+  <path d="M 340 312 C 375 312, 375 312, 402 312" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 750 312 C 790 312, 790 312, 822 312" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/>
+  <g>
+        <rect x="40" y="240" width="300" height="144" rx="12" fill="#111113" stroke="#ffca16" stroke-width="2"/>
+        <text x="60" y="280" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">CSRF token</text>
+        <text x="60" y="318" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Still required.</text><text x="60" y="344" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Not a human check.</text>
+      </g><g>
+        <rect x="410" y="240" width="340" height="144" rx="12" fill="#111113" stroke="#70b8ff" stroke-width="2"/>
+        <text x="430" y="280" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Django view</text>
+        <text x="430" y="318" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">POST siteverify.</text><text x="430" y="344" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Timeout of 5 seconds.</text>
+      </g><g>
+        <rect x="830" y="240" width="320" height="144" rx="12" fill="#111113" stroke="#46fea5" stroke-width="2"/>
+        <text x="850" y="280" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Create user</text>
+        <text x="850" y="318" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Pinned hostname</text><text x="850" y="344" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">example.com</text>
+      </g>
+</svg>

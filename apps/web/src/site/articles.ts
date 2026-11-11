@@ -1,30 +1,22 @@
-export interface ArticleSource {
-  readonly name: string;
-  readonly href: string;
-}
+import type { Article } from "./article-types";
+import { GUIDE_ARTICLES } from "./guides";
+import { HUBS } from "./guides/hubs";
 
-export interface ArticleSection {
-  readonly heading: string;
-  readonly paragraphs: readonly string[];
-}
-
-export interface Article {
-  readonly slug: string;
-  readonly path: string;
-  /** Visible H1. For an article this is the article title. */
-  readonly heading: string;
-  /** Title-tag text before " | BotRepel". */
-  readonly title: string;
-  readonly description: string;
-  /** Sitemap lastmod, YYYY-MM-DD. */
-  readonly updated: string;
-  readonly sections: readonly ArticleSection[];
-  readonly sources: readonly ArticleSource[];
-}
+export type {
+  Article,
+  ArticleBlock,
+  ArticleFaq,
+  ArticleFigure,
+  ArticleHowTo,
+  ArticleSection,
+  ArticleSource,
+  HowToStep,
+} from "./article-types";
 
 const UPDATED = "2026-11-10";
 
-export const ARTICLES: readonly Article[] = [
+/** Comparisons and product notes that predate the longer guides. */
+export const COMPARISON_ARTICLES: readonly Article[] = [
   {
     slug: "stop-bots-on-signup-forms",
     path: "/articles/stop-bots-on-signup-forms",
@@ -33,6 +25,8 @@ export const ARTICLES: readonly Article[] = [
     description:
       "Add human verification to a signup form and verify the token on your server before the account is created.",
     updated: UPDATED,
+    hub: "accounts",
+    related: ["/articles/stop-fake-signups", "/articles/honeypot-fields", "/articles/bot-protection-nextjs"],
     sections: [
       {
         heading: "Put the widget on the form",
@@ -70,6 +64,8 @@ export const ARTICLES: readonly Article[] = [
     description:
       "See which human verification records BotRepel keeps, for how long, and which camera frames it discards.",
     updated: UPDATED,
+    hub: "accounts",
+    related: ["/articles/captcha-alternatives", "/articles/bot-protection-glossary", "/privacy"],
     sections: [
       {
         heading: "The invisible check",
@@ -106,6 +102,12 @@ export const ARTICLES: readonly Article[] = [
     description:
       "Compare BotRepel with reCAPTCHA for human verification, using Google's docs and a published research paper.",
     updated: UPDATED,
+    hub: "captcha",
+    related: [
+      "/articles/captcha-alternatives",
+      "/articles/botrepel-vs-hcaptcha",
+      "/articles/botrepel-vs-cloudflare-turnstile",
+    ],
     sections: [
       {
         heading: "What Google documents",
@@ -149,6 +151,12 @@ export const ARTICLES: readonly Article[] = [
     description:
       "Compare BotRepel with hCaptcha for human verification, using hCaptcha's developer guide for the other product.",
     updated: UPDATED,
+    hub: "captcha",
+    related: [
+      "/articles/captcha-alternatives",
+      "/articles/botrepel-vs-recaptcha",
+      "/articles/botrepel-vs-cloudflare-turnstile",
+    ],
     sections: [
       {
         heading: "What hCaptcha's developer guide says",
@@ -185,6 +193,8 @@ export const ARTICLES: readonly Article[] = [
     description:
       "Compare BotRepel with Cloudflare Turnstile for human verification, using Cloudflare's Turnstile overview.",
     updated: UPDATED,
+    hub: "captcha",
+    related: ["/articles/captcha-alternatives", "/articles/botrepel-vs-recaptcha", "/articles/botrepel-vs-hcaptcha"],
     sections: [
       {
         heading: "What Cloudflare's overview says",
@@ -215,6 +225,21 @@ export const ARTICLES: readonly Article[] = [
     ],
   },
 ];
+
+const bySlug = new Map<string, Article>(
+  [...GUIDE_ARTICLES, ...COMPARISON_ARTICLES].map((article) => [article.slug, article]),
+);
+
+/** Hub order, so the index and the sitemap follow the guide groups. */
+export const ARTICLES: readonly Article[] = HUBS.flatMap((hub) =>
+  hub.slugs.map((slug) => {
+    const article = bySlug.get(slug);
+    if (!article) {
+      throw new Error(`Missing article ${slug}`);
+    }
+    return article;
+  }),
+);
 
 export function articleByPath(path: string): Article | undefined {
   return ARTICLES.find((article) => article.path === path);

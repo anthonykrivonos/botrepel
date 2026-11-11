@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8f93"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#0a0a0c"/>
+  <path d="M 340 312 C 370 312, 370 492, 392 492" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 740 152 C 570 152, 570 492, 392 492" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 740 492 C 780 492, 780 322, 812 322" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/>
+  <g>
+        <rect x="40" y="240" width="300" height="144" rx="12" fill="#111113" stroke="#ffca16" stroke-width="2"/>
+        <text x="60" y="280" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">wp-config.php</text>
+        <text x="60" y="318" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Secret constant.</text><text x="60" y="344" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Not in the theme.</text>
+      </g><g>
+        <rect x="400" y="80" width="340" height="144" rx="12" fill="#111113" stroke="#70b8ff" stroke-width="2"/>
+        <text x="420" y="120" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Comment or register</text>
+        <text x="420" y="158" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Iframe in the form.</text><text x="420" y="184" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Listener copies token.</text>
+      </g><g>
+        <rect x="400" y="420" width="340" height="144" rx="12" fill="#111113" stroke="#70b8ff" stroke-width="2"/>
+        <text x="420" y="460" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">wp_remote_post</text>
+        <text x="420" y="498" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Five-second timeout.</text><text x="420" y="524" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Fails closed on error.</text>
+      </g><g>
+        <rect x="820" y="250" width="330" height="144" rx="12" fill="#111113" stroke="#46fea5" stroke-width="2"/>
+        <text x="840" y="290" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Then save</text>
+        <text x="840" y="328" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">preprocess_comment or</text><text x="840" y="354" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">registration_errors</text>
+      </g>
+</svg>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8f93"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#0a0a0c"/>
+  <path d="M 360 112 C 420 112, 420 335, 472 335" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 360 332 C 420 332, 420 335, 472 335" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 360 539 C 420 539, 420 335, 472 335" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/>
+  <g>
+        <rect x="40" y="40" width="320" height="144" rx="12" fill="#111113" stroke="#46fea5" stroke-width="2"/>
+        <text x="60" y="80" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Person</text>
+        <text x="60" y="118" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Leaves company_website</text><text x="60" y="144" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">empty</text>
+      </g><g>
+        <rect x="40" y="260" width="320" height="144" rx="12" fill="#111113" stroke="#ff9592" stroke-width="2"/>
+        <text x="60" y="300" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Simple bot</text>
+        <text x="60" y="338" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Fills every input</text><text x="60" y="364" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">it finds</text>
+      </g><g>
+        <rect x="40" y="480" width="320" height="118" rx="12" fill="#111113" stroke="#ffca16" stroke-width="2"/>
+        <text x="60" y="520" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Browser bot</text>
+        <text x="60" y="558" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Skips the hidden field</text>
+      </g><g>
+        <rect x="480" y="250" width="640" height="170" rx="12" fill="#111113" stroke="#70b8ff" stroke-width="2"/>
+        <text x="500" y="290" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Next check</text>
+        <text x="500" y="328" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Empty honeypot continues</text><text x="500" y="354" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">to siteverify. A filled</text><text x="500" y="380" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">field is rejected first.</text>
+      </g>
+</svg>

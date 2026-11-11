@@ -4,7 +4,7 @@ import { renderToString } from "react-dom/server";
 import { MAX_ATTEMPTS } from "../../lib/liveness/flow";
 import { RETENTION } from "../../lib/purge";
 import { App } from "../../src/App";
-import { ARTICLES } from "../../src/site/articles";
+import { ARTICLES, articleByPath } from "../../src/site/articles";
 import { pages, HOME_HEADING } from "../../src/site/content";
 import { FACT_LIMITS } from "../../src/site/facts";
 import { installMarkdown } from "../../src/site/install";
@@ -41,6 +41,13 @@ describe("discovery files", () => {
     expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/about</loc><lastmod>2026-11-10</lastmod>");
     expect(files["sitemap.xml"]).toContain(
       "<loc>https://botrepel.com/articles/botrepel-vs-recaptcha</loc><lastmod>2026-11-10</lastmod>",
+    );
+    expect(files["sitemap.xml"]).toContain(
+      "<loc>https://botrepel.com/articles/block-bots-from-scraping</loc><lastmod>2026-11-11</lastmod>",
+    );
+    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/guides</loc><lastmod>2026-11-11</lastmod>");
+    expect(files["sitemap.xml"]).toContain(
+      "<loc>https://botrepel.com/guides/block-bots</loc><lastmod>2026-11-11</lastmod>",
     );
     expect(files["robots.txt"]).not.toContain("Disallow: /articles");
     expect(files["robots.txt"]).not.toContain("Disallow: /about");
@@ -95,9 +102,11 @@ describe("indexable pages", () => {
       const head = renderHead(page, config);
       const json = head.match(/<script type="application\/ld\+json">(.*?)<\/script>/)?.[1];
       expect(json, page.path).toBeTruthy();
+      const article = page.kind === "article" ? articleByPath(page.path) : undefined;
       const errors = validateStructuredData(JSON.parse(json ?? ""), {
-        faq: page.kind === "home",
+        faq: page.kind === "home" || Boolean(article?.faqs?.length),
         article: page.kind === "article",
+        howTo: Boolean(article?.howTo),
       });
       expect(errors, page.path).toEqual([]);
     }

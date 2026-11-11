@@ -1,6 +1,7 @@
 import { articleByPath } from "./articles";
 import type { SitePage } from "./content";
 import { FAQ } from "./faq-data";
+import { hubBySlug } from "./guides/hubs";
 import { OPERATOR, OPERATOR_POSTAL } from "./legal";
 import { SITE_NAME, CONTACT_EMAIL } from "../shared/constants";
 import { MICROS_PER_DOLLAR, PRICE_MICROS } from "../shared/pricing";
@@ -21,10 +22,18 @@ const usd = (micros: number): string => (micros / MICROS_PER_DOLLAR).toFixed(4).
 function crumbs(origin: string, page: SitePage): JsonLdNode {
   const home = absolute(origin, "/");
   const items: { name: string; item: string }[] = [{ name: SITE_NAME, item: home }];
+  if (page.path === "/guides" || page.path.startsWith("/guides/")) {
+    items.push({ name: "Guides", item: absolute(origin, "/guides") });
+  }
   if (page.path.startsWith("/articles/")) {
     items.push({ name: "Articles", item: absolute(origin, "/articles") });
+    const article = articleByPath(page.path);
+    const hub = article?.hub ? hubBySlug(article.hub) : undefined;
+    if (hub) {
+      items.push({ name: hub.heading, item: absolute(origin, hub.path) });
+    }
   }
-  if (page.path !== "/") {
+  if (page.path !== "/" && page.path !== "/guides") {
     items.push({ name: page.heading, item: absolute(origin, page.path) });
   }
   return {
@@ -90,6 +99,7 @@ export function structuredData(page: SitePage, origin: string): JsonLdDocument {
   }
   const article = page.kind === "article" ? articleByPath(page.path) : undefined;
   if (article) {
+    const image = page.image ? absolute(origin, page.image) : undefined;
     graph.push({
       "@type": "TechArticle",
       headline: article.heading,
@@ -97,9 +107,33 @@ export function structuredData(page: SitePage, origin: string): JsonLdDocument {
       datePublished: article.updated,
       dateModified: article.updated,
       mainEntityOfPage: absolute(origin, article.path),
+      ...(image ? { image } : {}),
       author: { "@type": "Organization", name: SITE_NAME, url: siteUrl },
       publisher: { "@id": organizationId },
     });
+    if (article.howTo) {
+      graph.push({
+        "@type": "HowTo",
+        name: article.howTo.name,
+        ...(image ? { image } : {}),
+        step: article.howTo.steps.map((step, index) => ({
+          "@type": "HowToStep",
+          position: index + 1,
+          name: step.name,
+          text: step.text,
+        })),
+      });
+    }
+    if (article.faqs && article.faqs.length > 0) {
+      graph.push({
+        "@type": "FAQPage",
+        mainEntity: article.faqs.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      });
+    }
   }
   return { "@context": "https://schema.org", "@graph": graph };
 }
@@ -183,6 +217,20 @@ function checkNode(node: Record<string, unknown>, errors: string[]): void {
     if (!isRecord(node.author)) {
       errors.push("TechArticle is missing author.");
     }
+  } else if (typeName === "HowTo") {
+    need(node, "name", typeName, errors);
+    if (!Array.isArray(node.step) || node.step.length === 0) {
+      errors.push("HowTo is missing step.");
+    } else {
+      for (const step of node.step) {
+        if (!isRecord(step) || step["@type"] !== "HowToStep") {
+          errors.push("HowTo steps must be HowToStep.");
+          continue;
+        }
+        need(step, "name", "HowToStep", errors);
+        need(step, "text", "HowToStep", errors);
+      }
+    }
   } else {
     errors.push(`Unexpected @type ${typeName}.`);
   }
@@ -191,7 +239,7 @@ function checkNode(node: Record<string, unknown>, errors: string[]): void {
 /** Returns schema.org shape errors. An empty list means the document matches the types this site emits. */
 export function validateStructuredData(
   value: unknown,
-  expected: { readonly faq: boolean; readonly article: boolean },
+  expected: { readonly faq: boolean; readonly article: boolean; readonly howTo?: boolean },
 ): readonly string[] {
   const errors: string[] = [];
   if (!isRecord(value)) {
@@ -224,6 +272,9 @@ export function validateStructuredData(
   }
   if (expected.article !== types.has("TechArticle")) {
     errors.push(expected.article ? "Missing TechArticle." : "TechArticle is only for an article.");
+  }
+  if (Boolean(expected.howTo) !== types.has("HowTo")) {
+    errors.push(expected.howTo ? "Missing HowTo." : "HowTo is only for a how-to article.");
   }
   return errors;
 }

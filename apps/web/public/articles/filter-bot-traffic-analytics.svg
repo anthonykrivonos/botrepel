@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8f93"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#0a0a0c"/>
+  <path d="M 280 332 C 320 332, 320 152, 352 152" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 280 332 C 320 332, 320 492, 352 492" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 700 152 C 750 152, 750 312, 792 312" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/><path d="M 700 492 C 750 492, 750 312, 792 312" fill="none" stroke="#8a8f93" stroke-width="2" marker-end="url(#arrow)"/>
+  <g>
+        <rect x="40" y="260" width="240" height="144" rx="12" fill="#111113" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+        <text x="60" y="300" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Request</text>
+        <text x="60" y="338" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Every client</text><text x="60" y="364" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">hits the server</text>
+      </g><g>
+        <rect x="360" y="80" width="340" height="144" rx="12" fill="#111113" stroke="#70b8ff" stroke-width="2"/>
+        <text x="380" y="120" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Server log</text>
+        <text x="380" y="158" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Status, path, and</text><text x="380" y="184" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">siteverify error codes</text>
+      </g><g>
+        <rect x="360" y="420" width="340" height="144" rx="12" fill="#111113" stroke="#ffca16" stroke-width="2"/>
+        <text x="380" y="460" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">GA4 report</text>
+        <text x="380" y="498" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Known bots already excluded.</text><text x="380" y="524" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">Excluded volume is hidden.</text>
+      </g><g>
+        <rect x="800" y="240" width="340" height="144" rx="12" fill="#111113" stroke="#ff9592" stroke-width="2"/>
+        <text x="820" y="280" fill="#fcfcfd" font-size="22" font-family="Inter, ui-sans-serif, sans-serif">Do not subtract</text>
+        <text x="820" y="318" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">The gap is not a</text><text x="820" y="344" fill="#b8bdc2" font-size="16" font-family="Inter, ui-sans-serif, sans-serif">bot percentage</text>
+      </g>
+</svg>
