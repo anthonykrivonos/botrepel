@@ -3,12 +3,15 @@ import { fileURLToPath } from "node:url";
 import type { BunPlugin } from "bun";
 import tailwind from "bun-plugin-tailwind";
 import { productionEnvProblems, readEnv } from "./lib/env";
+import { serializeError } from "./lib/errors";
 import { WASM_FILES } from "./lib/liveness/models/paths";
+import { Logger } from "./lib/logger";
 import manifest from "./models/manifest.json";
 import vercel from "../../vercel.json";
+import { DEMO_SITE_KEY_META } from "./src/shared/constants";
 import { accountPages, notFoundPage, pages } from "./src/site/content";
 import { renderDocument } from "./src/site/render";
-import { discoveryFiles, resolveSeoConfig } from "./src/site/seo";
+import { discoveryFiles, escapeHtml, resolveSeoConfig } from "./src/site/seo";
 
 const directory = new URL("./dist/", import.meta.url);
 const browserMaps = new URL("./.build/browser-sourcemaps/", import.meta.url);
@@ -22,6 +25,14 @@ if (env.VERCEL_ENV === "production") {
 /** Only production (or MIGRATE=1) migrates, so a preview deployment can never change the production schema. */
 if (env.DATABASE_URL && (env.VERCEL_ENV === "production" || env.MIGRATE === "1")) {
   await import("./lib/migrate");
+}
+/**
+ * Production inlines the public demo key into the page. The secret stays sealed in the database.
+ * A failed prepare does not fail the build: the server creates the site on the first request.
+ */
+let demoSiteKey = env.PUBLIC_DEMO_SITE_KEY ?? null;
+if (!demoSiteKey && !env.DEMO_SECRET_KEY && env.VERCEL_ENV === "production") {
+  demoSiteKey = await prepareDemoSiteKey();
 }
 const seo = resolveSeoConfig();
 await rm(directory, { recursive: true, force: true });
@@ -101,7 +112,11 @@ for (const page of [...pages, ...accountPages, notFoundPage]) {
   const filename = page.path === "/" ? "index.html" : `${page.path.slice(1)}.html`;
   const target = new URL(filename, directory);
   await mkdir(new URL("./", target), { recursive: true });
-  await Bun.write(target, renderDocument(shell, page, seo));
+  let html = renderDocument(shell, page, seo);
+  if (page.path === "/" && demoSiteKey) {
+    html = html.replace("<head>", `<head><meta name="${DEMO_SITE_KEY_META}" content="${escapeHtml(demoSiteKey)}">`);
+  }
+  await Bun.write(target, html);
 }
 for (const [filename, content] of Object.entries(discoveryFiles(seo))) {
   await Bun.write(new URL(filename, directory), content);
@@ -186,6 +201,24 @@ async function assertWidgetBudget(output: Bun.BuildOutput): Promise<void> {
       console.error(`The widget ${kind} is ${size} B gzipped, over the ${WIDGET_BUDGET_GZIP[kind]} B budget.`);
       process.exit(1);
     }
+  }
+}
+
+async function prepareDemoSiteKey(): Promise<string | null> {
+  try {
+    const { createAuth } = await import("./lib/auth");
+    const { demoCredentials } = await import("./lib/demo-site");
+    const keys = await demoCredentials(createAuth(undefined, { sendEmail: async () => undefined }));
+    if (!keys.siteKey || !keys.secretKey) {
+      return null;
+    }
+    process.env.PUBLIC_DEMO_SITE_KEY = keys.siteKey;
+    return keys.siteKey;
+  } catch (error) {
+    new Logger("build").warn("The home page demo was not prepared during the build", {
+      cause: serializeError(error),
+    });
+    return null;
   }
 }
 

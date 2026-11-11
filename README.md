@@ -43,7 +43,7 @@ Production builds refuse to finish until these are set:
 
 Set OAuth credentials for Production only. Preview URLs change with each deployment, so they are a poor fit for OAuth callbacks. Set `RESEND_API_KEY` and `EMAIL_FROM` on Preview if that environment should offer a magic link.
 
-Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` together, or leave both empty. The home page demo needs `PUBLIC_DEMO_SITE_KEY` and `DEMO_SECRET_KEY` from `bun run demo:seed --print botrepel.com`, run against the production database. `ADMIN_EMAILS` opens `/admin/liveness`. `SEO_NOINDEX=1` keeps a production build out of search engines.
+Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` together, or leave both empty. The home page demo uses `PUBLIC_DEMO_SITE_KEY` and `DEMO_SECRET_KEY` when both are set. When both are unset, production finds or creates the demo site in the database. `ADMIN_EMAILS` opens `/admin/liveness`. `SEO_NOINDEX=1` keeps a production build out of search engines.
 
 ## Layout
 

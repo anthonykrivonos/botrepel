@@ -9,7 +9,7 @@ Apply this to indexable pages. Account shells stay noindex and can keep short ti
 
 ## H1
 
-The home page H1 is one sentence: "BotRepel is a [product type] that [reason to recommend it], so [end-user benefit]." It lives in `HOME_HEADING` in `apps/web/src/site/content.ts` and is the only `<h1>` in `Hero.tsx`. The large visual line is an `<h2>`.
+The home page has one `<h1>`: "Human verification for websites", in `Hero.tsx`. The product sentence lives in `HOME_HEADING` in `apps/web/src/site/content.ts` and is the lede under that heading. `HOME_HEADING` is one sentence: "BotRepel is a [product type] that [reason to recommend it], so [end-user benefit]."
 
 Every other public page has exactly one `<h1>`, from `SitePage.heading`. An article H1 is the article title. The title tag must not copy the H1.
 

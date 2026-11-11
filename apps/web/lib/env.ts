@@ -59,7 +59,12 @@ export const EnvSchema = z.object({
   /** Credit top-ups; without them the dashboard can't take payments. */
   STRIPE_SECRET_KEY: text,
   STRIPE_WEBHOOK_SECRET: text,
-  /** The demo site's secret key, for the home page's live demo (`bun run demo:seed` makes one locally). */
+  /**
+   * Public key for the home page demo. With DEMO_SECRET_KEY, overrides the database.
+   * When both are unset, the server finds or creates the demo site.
+   */
+  PUBLIC_DEMO_SITE_KEY: text,
+  /** Secret for the home page demo. Stays on the server. When both demo keys are unset, the server creates one. */
   DEMO_SECRET_KEY: text,
   /** Light-check attempts per check, retries included; 3 when unset. */
   LIVENESS_MAX_ATTEMPTS: wholeNumber("LIVENESS_MAX_ATTEMPTS"),

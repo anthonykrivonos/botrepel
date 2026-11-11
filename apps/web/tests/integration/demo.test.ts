@@ -21,9 +21,9 @@ afterAll(() => {
 });
 
 /** A token from the invisible flow, as the widget would get it. */
-async function tokenFor(siteKey: string): Promise<string> {
+async function tokenFor(siteKey: string, hostname = "botrepel.test"): Promise<string> {
   const start = await app.call("/v1/challenge/start", {
-    json: { siteKey, action: "demo", hostname: "botrepel.test" },
+    json: { siteKey, action: "demo", hostname },
   });
   const challenge = (await start.json()) as StartedChallenge;
   const done = await app.call("/v1/challenge/invisible", {
@@ -53,10 +53,39 @@ describe("home page demo", () => {
     expect(response.status).toBe(403);
   });
 
-  test("is unavailable without a demo secret", async () => {
+  test("finds or creates the demo site when the env keys are unset", async () => {
+    const savedSecret = process.env.DEMO_SECRET_KEY;
+    const savedPublic = process.env.PUBLIC_DEMO_SITE_KEY;
     delete process.env.DEMO_SECRET_KEY;
-    const response = await demoVerify(await tokenFor(demo.site.siteKey));
-    expect(response.status).toBe(503);
-    process.env.DEMO_SECRET_KEY = demo.secretKey;
+    delete process.env.PUBLIC_DEMO_SITE_KEY;
+    try {
+      const listed = await app.call("/api/demo");
+      expect(listed.status).toBe(200);
+      const body = (await listed.json()) as { siteKey?: string; secretKey?: string };
+      expect(Object.keys(body)).toEqual(["siteKey"]);
+      expect(body.siteKey).toMatch(/^br_pk_[A-Za-z0-9]{16}$/);
+      expect(JSON.stringify(body)).not.toContain("br_sk_");
+
+      const foreign = await demoVerify(await tokenFor(other.site.siteKey));
+      expect(foreign.status).toBe(400);
+
+      const response = await demoVerify(await tokenFor(body.siteKey ?? "", "botrepel.com"));
+      expect(response.status).toBe(200);
+      expect(await response.json()).toMatchObject({ success: true, hostname: "botrepel.com", action: "demo" });
+
+      const again = await app.call("/api/demo");
+      expect(await again.json()).toEqual({ siteKey: body.siteKey });
+    } finally {
+      if (savedSecret === undefined) {
+        delete process.env.DEMO_SECRET_KEY;
+      } else {
+        process.env.DEMO_SECRET_KEY = savedSecret;
+      }
+      if (savedPublic === undefined) {
+        delete process.env.PUBLIC_DEMO_SITE_KEY;
+      } else {
+        process.env.PUBLIC_DEMO_SITE_KEY = savedPublic;
+      }
+    }
   });
 });

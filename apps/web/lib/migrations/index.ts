@@ -65,6 +65,21 @@ const MIGRATIONS: readonly Migration[] = [
       }
     },
   },
+  {
+    id: "0005-demo-credential",
+    // The home page demo's secret, sealed with CHALLENGE_SECRET. One row. Never sent to the browser.
+    up: (sql) =>
+      sql
+        .all(
+          `CREATE TABLE IF NOT EXISTS "demoCredential" (
+             "id" TEXT PRIMARY KEY,
+             "siteId" TEXT NOT NULL,
+             "sealedSecret" TEXT NOT NULL
+           )`,
+          [],
+        )
+        .then(() => undefined),
+  },
 ];
 
 const logger = new Logger("migrate");

@@ -91,19 +91,19 @@ tests drive this with Chrome's virtual authenticator (`apps/web/tests/e2e/human-
 
 ## The home page demo
 
-The hero runs the real widget on a demo site. Create it once (it writes both keys to `.env`), then
-restart the server:
+The hero runs the real widget on a demo site. When `PUBLIC_DEMO_SITE_KEY` and `DEMO_SECRET_KEY`
+are both unset, the server finds or creates that site and the page loads its public key.
+The secret stays on the server. Set both keys, or neither.
+
+To pin the keys in `.env` and restart so the public key is inlined:
 
 ```sh
 bun run demo:seed
 ```
 
-Without `PUBLIC_DEMO_SITE_KEY` the demo says it's unavailable. Its server calls go through
-`POST /api/demo/verify`, which only accepts same-origin requests, so set `BETTER_AUTH_URL` to the
+`POST /api/demo/verify` only accepts same-origin requests, so set `BETTER_AUTH_URL` to the
 origin you browse (e.g. `http://127.0.0.1:3000`) if it isn't `http://localhost:3000`. A Playwright
 browser is usually stepped up to Human Pass or the light check: the risk signals see automation.
-For production, run the seed against the production database with the domain
-(`bun run demo:seed --print botrepel.com`) and set both printed keys in the Vercel project.
 
 ## Tests
 

@@ -1,23 +1,50 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TierPicker } from "./TierPicker";
 import { BotRepel, type BotRepelHandle } from "../../../../packages/botrepel/src/react/BotRepel";
 import { Button } from "../components/Button";
 import { CodeBlock } from "../components/CodeBlock";
 import { useOrigin } from "../hooks/useOrigin";
 import type { Assurance } from "../shared/assurance";
+import { DEMO_SITE_KEY_META } from "../shared/constants";
 import type { SiteverifyResponse } from "../shared/siteverify";
 
+const SITE_KEY = /^br_pk_[A-Za-z0-9]{16}$/;
+
+type DemoKey =
+  | { readonly status: "ready"; readonly siteKey: string }
+  | { readonly status: "loading" }
+  | { readonly status: "unavailable" };
+
 /**
- * BotRepel's own demo site; unset on servers that haven't run `bun run demo:seed`.
- * Bun inlines PUBLIC_* only when set, so an unset key leaves a `process` reference that throws in the browser.
+ * The build inlines PUBLIC_DEMO_SITE_KEY when it is set.
+ * Bun leaves a `process` reference when it is unset, and that throws in the browser.
  */
-const DEMO_SITE_KEY = ((): string | undefined => {
+function inlinedDemoSiteKey(): string | undefined {
   try {
-    return process.env.PUBLIC_DEMO_SITE_KEY;
+    const value = process.env.PUBLIC_DEMO_SITE_KEY?.trim();
+    return value && SITE_KEY.test(value) ? value : undefined;
   } catch {
     return undefined;
   }
-})();
+}
+
+/** The public key from the build, or from the meta tag the build writes into the home page. */
+function publishedDemoSiteKey(): string | undefined {
+  const inlined = inlinedDemoSiteKey();
+  if (inlined) {
+    return inlined;
+  }
+  if (typeof document === "undefined") {
+    return undefined;
+  }
+  const content = document.querySelector(`meta[name="${DEMO_SITE_KEY_META}"]`)?.getAttribute("content")?.trim();
+  return content && SITE_KEY.test(content) ? content : undefined;
+}
+
+function initialDemoKey(): DemoKey {
+  const siteKey = publishedDemoSiteKey();
+  return siteKey ? { status: "ready", siteKey } : { status: "loading" };
+}
 
 const HINTS: Readonly<Record<Assurance, string>> = {
   invisible: "Proof of work and browser signals usually let you pass without a click.",
@@ -38,10 +65,47 @@ export function DemoCard(): React.JSX.Element {
   const widget = useRef<BotRepelHandle>(null);
   const [tier, setTier] = useState<Assurance>("liveness");
   const [status, setStatus] = useState<Status>({ kind: "ready" });
+  const [demoKey, setDemoKey] = useState<DemoKey>(initialDemoKey);
 
-  if (!DEMO_SITE_KEY) {
-    return <p className="text-sm text-fg-muted">The live demo isn't available on this server right now.</p>;
+  useEffect(() => {
+    if (demoKey.status !== "loading") {
+      return;
+    }
+    const controller = new AbortController();
+    void (async (): Promise<void> => {
+      try {
+        const response = await fetch("/api/demo", { signal: controller.signal });
+        if (!response.ok) {
+          setDemoKey({ status: "unavailable" });
+          return;
+        }
+        const body = (await response.json()) as { siteKey?: unknown };
+        if (typeof body.siteKey === "string" && SITE_KEY.test(body.siteKey)) {
+          setDemoKey({ status: "ready", siteKey: body.siteKey });
+          return;
+        }
+        setDemoKey({ status: "unavailable" });
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        setDemoKey({ status: "unavailable" });
+      }
+    })();
+    return () => controller.abort();
+  }, [demoKey.status]);
+
+  if (demoKey.status !== "ready") {
+    return demoKey.status === "unavailable" ? (
+      <p className="text-sm text-fg-muted">The live demo isn't available on this server right now.</p>
+    ) : (
+      <p className="min-h-10 text-sm text-fg-muted" aria-busy="true">
+        Loading the demo.
+      </p>
+    );
   }
+
+  const siteKey = demoKey.siteKey;
 
   const verify = async (token: string): Promise<void> => {
     try {
@@ -71,7 +135,7 @@ export function DemoCard(): React.JSX.Element {
         <BotRepel
           key={tier}
           ref={widget}
-          siteKey={DEMO_SITE_KEY}
+          siteKey={siteKey}
           action="demo"
           minAssurance={tier}
           mode="execute"

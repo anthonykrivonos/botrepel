@@ -1,6 +1,9 @@
 export const SITE_NAME = "BotRepel";
 export const SITE_DOMAIN = "botrepel.com";
 
+/** Meta name for the home page's public demo site key. The secret is never written here. */
+export const DEMO_SITE_KEY_META = "botrepel-demo-site-key";
+
 export const NO_STORE_HEADERS = { "Cache-Control": "no-store" } as const;
 
 export const LOOPBACK_HOSTS = ["localhost", "127.0.0.1", "[::1]"] as const;

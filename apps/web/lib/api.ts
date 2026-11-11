@@ -6,6 +6,7 @@ import { completeInvisible, startChallenge } from "./challenges";
 import { ensureSite, rotateForCli } from "./cli-sites";
 import { cliTokenOwner, issueCliToken } from "./cli-tokens";
 import { adapterOf, clientIp, hashKey, sqlFor } from "./db";
+import { demoCredentials } from "./demo-site";
 import { emailSender, type SendEmail } from "./email";
 import { embedderHost, issueEmbedTicket, readEmbedTicket } from "./embed-ticket";
 import { adminEmails, authOrigin, isProduction, readEnv, requireSecret, secretOf } from "./env";
@@ -441,13 +442,26 @@ export function createApi(auth: Auth, services: ApiServices): ApiHandler {
     return json(result, result.success ? 200 : 400);
   }
 
+  /** Public site key for the home page demo. The secret stays on the server. */
+  async function demoConfig(request: Request): Promise<Response> {
+    const refused = await widgetGuard(request);
+    if (refused) {
+      return refused;
+    }
+    const keys = await demoKeys();
+    if (!keys.siteKey) {
+      return json({ error: "The demo isn't set up on this server." }, 503);
+    }
+    return json({ siteKey: keys.siteKey });
+  }
+
   /** The home page's live demo: siteverify for BotRepel's own demo site, so visitors see a real response. */
   async function demoVerify(request: Request): Promise<Response> {
     const refused = await widgetGuard(request);
     if (refused) {
       return refused;
     }
-    const secret = readEnv().DEMO_SECRET_KEY;
+    const secret = (await demoKeys()).secretKey;
     if (!secret) {
       return json({ error: "The demo isn't set up on this server." }, 503);
     }
@@ -464,6 +478,15 @@ export function createApi(auth: Auth, services: ApiServices): ApiHandler {
       { secret, response: token },
     );
     return json(result, result.success ? 200 : 400);
+  }
+
+  async function demoKeys(): Promise<{ siteKey: string | null; secretKey: string | null }> {
+    try {
+      return await demoCredentials(auth);
+    } catch (error) {
+      logger.error("Could not prepare the demo site", { cause: serializeError(error) });
+      return { siteKey: null, secretKey: null };
+    }
   }
 
   /** /v1/cli/* takes only a scoped CLI token (`br_cli_…`); sessions and cookies don't count here. */
@@ -626,6 +649,7 @@ export function createApi(auth: Auth, services: ApiServices): ApiHandler {
     { pattern: /^\/v1\/pass\/register\/verify$/, methods: { POST: passRegisterRoute } },
     { pattern: /^\/v1\/feedback$/, methods: { POST: feedbackRoute } },
     { pattern: /^\/v1\/siteverify$/, methods: { POST: siteverifyRoute } },
+    { pattern: /^\/api\/demo$/, methods: { GET: demoConfig } },
     { pattern: /^\/api\/demo\/verify$/, methods: { POST: demoVerify } },
     { pattern: /^\/v1\/stripe\/webhook$/, methods: { POST: stripeWebhook } },
     { pattern: /^\/api\/cron\/purge$/, methods: { GET: purgeRoute } },
