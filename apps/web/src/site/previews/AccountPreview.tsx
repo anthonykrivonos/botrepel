@@ -4,7 +4,6 @@ import type { MiniSitePreviewProps } from "./previewTypes";
 export function AccountPreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="Coinbaste"
       address="coinbaste.example/sign-in"
       active={active}
       outcome="Sign-in approved"

@@ -4,7 +4,6 @@ import type { MiniSitePreviewProps } from "./previewTypes";
 export function AgentSignupPreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="Uncommon Paper"
       address="uncommonpaper.example/onboarding"
       active={active}
       outcome="Account created"

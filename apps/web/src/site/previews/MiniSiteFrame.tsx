@@ -2,7 +2,6 @@ import { LogoMark } from "../../components/LogoMark";
 import { cn } from "../../utils/cn";
 
 interface MiniSiteFrameProps {
-  readonly name: string;
   readonly address: string;
   readonly active: boolean;
   readonly outcome: string;
@@ -12,7 +11,6 @@ interface MiniSiteFrameProps {
 
 /** A fictional website; its decorative verification sequence never makes a real request. */
 export function MiniSiteFrame({
-  name,
   address,
   active,
   outcome,
@@ -56,6 +54,7 @@ export function MiniSiteFrame({
       </div>
       <div className="mini-site-click pointer-events-none absolute top-[87%] left-[82%] size-[7cqw] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/80 bg-white/20" />
       <svg
+        aria-hidden="true"
         className="mini-site-cursor pointer-events-none absolute h-[7cqw] w-[5cqw] overflow-visible drop-shadow-[0_2px_2px_rgb(0_0_0/0.35)]"
         viewBox="0 0 24 34"
         fill="#111"
@@ -63,7 +62,6 @@ export function MiniSiteFrame({
         strokeWidth="1.6"
         strokeLinejoin="round"
       >
-        <title>{`${name} demonstration cursor`}</title>
         <path d="M2 2v25l6.4-6.1 4.5 10.7 4.5-1.9-4.6-10.5H22L2 2Z" />
       </svg>
     </div>

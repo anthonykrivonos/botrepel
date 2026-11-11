@@ -37,7 +37,7 @@ describe("discovery files", () => {
     expect(files["robots.txt"]).toContain("Sitemap: https://botrepel.com/sitemap.xml");
     expect(files["robots.txt"]).toContain("Disallow: /w/");
     expect(files["robots.txt"]).toContain("Disallow: /dashboard");
-    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/</loc>");
+    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/</loc><lastmod>2026-11-11</lastmod>");
     expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/about</loc><lastmod>2026-11-10</lastmod>");
     expect(files["sitemap.xml"]).toContain(
       "<loc>https://botrepel.com/articles/botrepel-vs-recaptcha</loc><lastmod>2026-11-10</lastmod>",
@@ -56,6 +56,8 @@ describe("discovery files", () => {
   test("the head escapes and canonicalizes", () => {
     const head = renderHead(pages[0]!, { origin: "https://botrepel.com", indexable: true });
     expect(head).toContain('<link rel="canonical" href="https://botrepel.com/">');
+    expect(head).toContain('<meta name="application-name" content="BotRepel">');
+    expect(head).toContain('<meta property="og:site_name" content="BotRepel">');
     expect(head).toContain('content="index, follow"');
     expect(head).toContain('<meta property="og:image" content="https://botrepel.com/og.png">');
     expect(head).toContain('<meta property="og:image:alt" content="BotRepel, human verification for websites.">');
@@ -77,13 +79,14 @@ const DAY_MS = 24 * 60 * 60_000;
 describe("indexable pages", () => {
   const indexed = pages.filter((page) => page.index);
   const config = { origin: "https://botrepel.com", indexable: true } as const;
+  const sitemap = discoveryFiles(config)["sitemap.xml"] ?? "";
 
   test("titles, descriptions, and a single H1 are present in prerendered HTML", () => {
     for (const page of indexed) {
       const title = documentTitle(page);
       expect(title.length, title).toBeGreaterThanOrEqual(50);
       expect(title.length, title).toBeLessThanOrEqual(60);
-      expect(title.endsWith(" | BotRepel"), title).toBe(true);
+      expect(title.endsWith(" | BotRepel"), title).toBe(page.path !== "/");
       expect(title, page.path).not.toBe(page.heading);
       expect(title.includes("—") || page.description.includes("—") || page.heading.includes("—")).toBe(false);
       expect(page.description.length, page.path).toBeLessThanOrEqual(155);
@@ -91,9 +94,23 @@ describe("indexable pages", () => {
       const head = renderHead(page, config);
       expect(head).toContain(`<title>${title}</title>`);
       expect(head).toContain(`<meta name="description" content="${escapeHtml(page.description)}">`);
+      expect(head).toContain(
+        `<link rel="canonical" href="https://botrepel.com${page.path === "/" ? "/" : page.path}">`,
+      );
+      expect(page.updated, page.path).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(sitemap, page.path).toContain(
+        `<loc>https://botrepel.com${page.path === "/" ? "/" : page.path}</loc><lastmod>${page.updated}</lastmod>`,
+      );
       const html = renderToString(createElement(App, { path: page.path }));
       expect(html.match(/<h1\b/g)?.length ?? 0, page.path).toBe(1);
       expect(html, page.path).toContain(`>${page.heading}<`);
+      expect(html, page.path).not.toContain("demonstration cursor");
+      if (page.path === "/") {
+        expect(title).toBe("BotRepel (Bot Repel): Human verification for web forms");
+        expect(page.description.startsWith("BotRepel")).toBe(true);
+        expect(page.description.match(/BotRepel/g)).toEqual(["BotRepel"]);
+        expect(html).toContain("BotRepel (also written Bot Repel) is made by Paraworks LLC.");
+      }
     }
   });
 
@@ -103,12 +120,38 @@ describe("indexable pages", () => {
       const json = head.match(/<script type="application\/ld\+json">(.*?)<\/script>/)?.[1];
       expect(json, page.path).toBeTruthy();
       const article = page.kind === "article" ? articleByPath(page.path) : undefined;
-      const errors = validateStructuredData(JSON.parse(json ?? ""), {
+      const data = JSON.parse(json ?? "") as {
+        "@graph": {
+          "@type": string;
+          name?: string;
+          alternateName?: string[];
+          url?: string;
+          logo?: string;
+          sameAs?: string[];
+        }[];
+      };
+      const errors = validateStructuredData(data, {
         faq: page.kind === "home" || Boolean(article?.faqs?.length),
         article: page.kind === "article",
         howTo: Boolean(article?.howTo),
       });
       expect(errors, page.path).toEqual([]);
+      if (page.path === "/") {
+        const organization = data["@graph"].find((node) => node["@type"] === "Organization");
+        const website = data["@graph"].find((node) => node["@type"] === "WebSite");
+        expect(organization).toMatchObject({
+          name: "BotRepel",
+          alternateName: ["Bot Repel", "botrepel.com"],
+          url: "https://botrepel.com/",
+          logo: "https://botrepel.com/favicon.svg",
+          sameAs: ["https://github.com/anthonykrivonos/botrepel"],
+        });
+        expect(website).toMatchObject({
+          name: "BotRepel",
+          alternateName: ["Bot Repel", "botrepel.com"],
+          url: "https://botrepel.com/",
+        });
+      }
     }
   });
 

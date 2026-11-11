@@ -7,7 +7,11 @@ export type PageKind = "home" | "page" | "article";
 
 export interface SitePage {
   readonly path: string;
-  /** Title-tag text before " | BotRepel". Indexable pages are sized so the full tag is 50 to 60 characters. */
+  /**
+   * Title-tag text before " | BotRepel".
+   * The home page stores the full title, which leads with the brand.
+   * Indexable pages are sized so the full tag is 50 to 60 characters.
+   */
   readonly title: string;
   readonly description: string;
   /** The only H1 on the page. */
@@ -93,11 +97,11 @@ export const accountPages: readonly SitePage[] = [
 export const pages: readonly SitePage[] = [
   {
     path: "/",
-    title: "Human verification widget for web forms",
-    description: `Add human verification to a website form. Invisible checks are ${formatPerThousand(PRICE_MICROS.invisible)} per 1,000 successful verifications. Each token works once for five minutes.`,
+    title: "BotRepel (Bot Repel): Human verification for web forms",
+    description: `BotRepel adds human verification to a website form. Invisible checks are ${formatPerThousand(PRICE_MICROS.invisible)} per 1,000 successful verifications. Each token works once for five minutes.`,
     heading: "Human verification for websites",
     index: true,
-    updated: CONTENT_UPDATED,
+    updated: "2026-11-11",
     kind: "home",
   },
   {

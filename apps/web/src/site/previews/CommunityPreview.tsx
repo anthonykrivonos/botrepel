@@ -4,7 +4,6 @@ import type { MiniSitePreviewProps } from "./previewTypes";
 export function CommunityPreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="Subsnack"
       address="subsnack.example/community"
       active={active}
       outcome="Post published"

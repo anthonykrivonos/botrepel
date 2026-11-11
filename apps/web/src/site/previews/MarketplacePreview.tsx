@@ -4,7 +4,6 @@ import type { MiniSitePreviewProps } from "./previewTypes";
 export function MarketplacePreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="Instacartoon"
       address="instacartoon.example/checkout"
       active={active}
       outcome="Offer claimed"

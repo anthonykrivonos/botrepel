@@ -1,4 +1,5 @@
 import { HUBS } from "./guides/hubs";
+import { OPERATOR } from "./legal";
 import { Glass } from "../components/Glass";
 import { Logo } from "../components/Logo";
 import { CONTACT_EMAIL } from "../shared/constants";
@@ -102,7 +103,7 @@ export function SiteFooter(): React.JSX.Element {
         </div>
         <div className="border-t border-line">
           <p className="px-6 py-5 text-xs text-fg-subtle sm:px-8 lg:px-10">
-            © {new Date().getFullYear()} BotRepel. Human verification for websites.
+            {`© ${new Date().getFullYear()} BotRepel. Human verification for websites. BotRepel (also written Bot Repel) is made by ${OPERATOR}.`}
           </p>
         </div>
       </Glass>

@@ -4,7 +4,6 @@ import type { MiniSitePreviewProps } from "./previewTypes";
 export function ContentPreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="Readit"
       address="readit.example/stories"
       active={active}
       outcome="Article unlocked"

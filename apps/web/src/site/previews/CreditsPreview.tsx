@@ -4,7 +4,6 @@ import type { MiniSitePreviewProps } from "./previewTypes";
 export function CreditsPreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="Replish"
       address="replish.example/workspace"
       active={active}
       outcome="100 credits unlocked"

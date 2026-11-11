@@ -3,7 +3,7 @@ import type { SitePage } from "./content";
 import { FAQ } from "./faq-data";
 import { hubBySlug } from "./guides/hubs";
 import { OPERATOR, OPERATOR_POSTAL } from "./legal";
-import { SITE_NAME, CONTACT_EMAIL } from "../shared/constants";
+import { CONTACT_EMAIL, SITE_DOMAIN, SITE_NAME } from "../shared/constants";
 import { MICROS_PER_DOLLAR, PRICE_MICROS } from "../shared/pricing";
 import { absolute } from "../shared/utils";
 
@@ -18,6 +18,12 @@ export interface JsonLdDocument {
 }
 
 const usd = (micros: number): string => (micros / MICROS_PER_DOLLAR).toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
+
+/** Names Google can use for the site name. */
+const ALTERNATE_NAMES = ["Bot Repel", SITE_DOMAIN] as const;
+
+/** Public profiles only. Do not add a URL that is not a real profile. */
+const SAME_AS = ["https://github.com/anthonykrivonos/botrepel"] as const;
 
 function crumbs(origin: string, page: SitePage): JsonLdNode {
   const home = absolute(origin, "/");
@@ -56,16 +62,19 @@ export function structuredData(page: SitePage, origin: string): JsonLdDocument {
       "@type": "Organization",
       "@id": organizationId,
       name: SITE_NAME,
+      alternateName: [...ALTERNATE_NAMES],
       legalName: OPERATOR,
       url: siteUrl,
       email: CONTACT_EMAIL,
       logo: absolute(origin, "/favicon.svg"),
+      sameAs: [...SAME_AS],
       address: { "@type": "PostalAddress", ...OPERATOR_POSTAL },
     },
     {
       "@type": "WebSite",
       "@id": absolute(origin, "/#website"),
       name: SITE_NAME,
+      alternateName: [...ALTERNATE_NAMES],
       url: siteUrl,
       publisher: { "@id": organizationId },
     },
@@ -147,6 +156,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function needNames(node: Record<string, unknown>, typeName: string, errors: string[]): void {
+  const names = node.alternateName;
+  if (!Array.isArray(names) || !names.includes("Bot Repel") || !names.includes(SITE_DOMAIN)) {
+    errors.push(`${typeName} alternateName must include Bot Repel and ${SITE_DOMAIN}.`);
+  }
+  if (node.name !== SITE_NAME) {
+    errors.push(`${typeName} name must be ${SITE_NAME}.`);
+  }
+}
+
 function need(node: Record<string, unknown>, key: string, typeName: string, errors: string[]): void {
   const value = node[key];
   if (typeof value === "string" ? value.length === 0 : value === undefined || value === null) {
@@ -164,9 +183,18 @@ function checkNode(node: Record<string, unknown>, errors: string[]): void {
     need(node, "name", typeName, errors);
     need(node, "legalName", typeName, errors);
     need(node, "url", typeName, errors);
+    need(node, "logo", typeName, errors);
+    if (typeof node.logo !== "string" || !node.logo.endsWith("/favicon.svg")) {
+      errors.push("Organization logo must be the favicon URL.");
+    }
+    needNames(node, typeName, errors);
+    if (!Array.isArray(node.sameAs) || !node.sameAs.includes(SAME_AS[0])) {
+      errors.push("Organization sameAs is missing the public GitHub profile.");
+    }
   } else if (typeName === "WebSite") {
     need(node, "name", typeName, errors);
     need(node, "url", typeName, errors);
+    needNames(node, typeName, errors);
     if (!isRecord(node.publisher)) {
       errors.push("WebSite is missing publisher.");
     }

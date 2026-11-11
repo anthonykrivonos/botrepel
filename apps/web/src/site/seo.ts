@@ -42,7 +42,11 @@ export function resolveSeoConfig(source?: EnvSource): SeoConfig {
   };
 }
 
+/** Home leads with the brand. Every other page ends with " | BotRepel". */
 export function documentTitle(page: SitePage): string {
+  if (page.path === "/") {
+    return page.title;
+  }
   return `${page.title} | ${SITE_NAME}`;
 }
 
@@ -56,6 +60,7 @@ export function renderHead(page: SitePage, config: SeoConfig): string {
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}">`,
+    `<meta name="application-name" content="${escapeHtml(SITE_NAME)}">`,
     `<meta name="robots" content="${config.indexable && page.index ? "index, follow" : "noindex, follow"}">`,
     url ? `<link rel="canonical" href="${url}">` : "",
     `<meta property="og:type" content="website">`,

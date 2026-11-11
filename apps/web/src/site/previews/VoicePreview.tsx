@@ -10,7 +10,6 @@ const CONTACTS = [
 export function VoicePreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="Blandish AI"
       address="blandish.example/campaigns"
       active={active}
       outcome="Call approved"

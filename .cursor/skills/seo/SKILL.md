@@ -15,7 +15,7 @@ Every other public page has exactly one `<h1>`, from `SitePage.heading`. An arti
 
 ## Title and meta
 
-`documentTitle` in `apps/web/src/site/seo.ts` appends ` | BotRepel`. For every indexable page the full title is 50 to 60 characters, contains the primary keyword, and has no em dash. The meta description is at most 155 characters, uses active voice, and contains the primary keyword.
+`documentTitle` in `apps/web/src/site/seo.ts` appends ` | BotRepel` on every indexable page except home. The home title leads with the brand and contains both "BotRepel" and "Bot Repel". For every indexable page the full title is 50 to 60 characters, contains the primary keyword, and has no em dash. The meta description is at most 155 characters, uses active voice, and contains the primary keyword. The home description names BotRepel once, near the start.
 
 `renderHead` writes the title, description, canonical URL, and social tags into the prerendered HTML in `apps/web/build.ts`. Do not set them only in client JavaScript.
 

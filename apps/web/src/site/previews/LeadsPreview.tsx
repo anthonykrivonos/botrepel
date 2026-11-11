@@ -4,7 +4,6 @@ import type { MiniSitePreviewProps } from "./previewTypes";
 export function LeadsPreview({ active }: MiniSitePreviewProps): React.JSX.Element {
   return (
     <MiniSiteFrame
-      name="PostHogwash"
       address="posthogwash.example/contact"
       active={active}
       outcome="Inquiry sent"
