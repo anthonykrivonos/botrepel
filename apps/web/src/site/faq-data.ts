@@ -19,7 +19,7 @@ export const FAQ: readonly FaqItem[] = [
   {
     question: "What does a visitor without a camera do?",
     answer:
-      "Most visitors only ever see the invisible check. A Human Pass needs no camera after it's created. Set liveness only on actions where you want a live face every time.",
+      "The invisible check does not use a camera. A Human Pass needs one light check to set up, then uses a passkey on later visits. Your policy and the visitor's risk signals can require a camera check. A visitor who cannot complete that check cannot pass that action, so consider an alternative support or recovery path before requiring liveness.",
   },
   {
     question: "How is it billed?",

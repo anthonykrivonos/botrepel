@@ -18,12 +18,31 @@ test("the home page renders, offers a prompt for this server, and fits the scree
   ).toBeVisible();
   await expect(page.getByText(`Follow ${E2E_ORIGIN}/install.md`).first()).toBeVisible();
   // The live demo mounts after hydration with the real widget.
-  await expect(page.getByRole("radio", { name: /Flash liveness/ })).toBeChecked();
+  await expect(page.getByRole("radio", { name: /Invisible check/ })).toBeChecked();
+  await expect(page.getByRole("heading", { name: "Built by Anthony Krivonos" })).toBeVisible();
   await expect(page.locator('iframe[src*="/w/br_pk_"]')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
     page.viewportSize()!.width,
   );
   expect(errors).toEqual([]);
+});
+
+test("the demo starts with the background check and keeps stronger checks available @phone", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Try the Demo", exact: true }).click();
+  await expect(page).toHaveURL(/#demo$/);
+  await expect(page.getByRole("heading", { name: "See what your visitors see" })).toBeVisible();
+  await expect(page.getByRole("radio", { name: /Invisible check/ })).toBeChecked();
+  await page.getByRole("radio", { name: /Invisible check/ }).press("ArrowRight");
+  await expect(page.getByRole("radio", { name: /Human Pass/ })).toBeChecked();
+  await page.getByRole("radio", { name: /Human Pass/ }).press("ArrowRight");
+  await expect(page.getByRole("radio", { name: /Flash liveness/ })).toBeChecked();
+  await expect(page.getByRole("button", { name: "Run Check", exact: true })).toBeEnabled();
+  await expect(page.locator("#facts dl")).not.toBeVisible();
+  await page.getByText("View prices, limits, and data retention", { exact: true }).click();
+  await expect(page.locator("#facts dl")).toBeVisible();
+  await page.locator("#facts summary").press("Enter");
+  await expect(page.locator("#facts dl")).not.toBeVisible();
 });
 
 test("the entire hero prompt copies by pointer and keyboard", async ({ page }) => {

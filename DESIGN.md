@@ -80,9 +80,12 @@ filling the O; it is an SVG with an accessible name, drawn in the current text c
 font size, so `text-lg` scales it. The favicon is the heart alone. `public/og.png` carries the
 wordmark: regenerate it with `bun run og:image`.
 
-The hero figure (`LightStage`, geometry in `utils/face.ts`) is a friendly, softly lit face: wrap
-lighting rather than hard shadows, features carried by albedo, highlights mixed toward white, and
-a blink every few seconds. Keep it gentle; dark sockets and steep shadows read as uncanny.
+The landing-page hero leads with the product description, free-credit terms, and a real widget demo.
+The demo defaults to the invisible check, and stronger checks remain selectable. Do not show a
+simulated face scan or a simulated successful verification as the first impression. The demo panel
+uses a solid raised surface, readable explanatory text, and an explicit privacy link. Camera access
+must follow the visitor's action and consent. A founder and contact note follows the hero, with
+links to the actual person and legal operator rather than unsupported badges or endorsements.
 
 The light check's head roll (`PoseRing`) rings the camera oval with 60 bars: long and white until
 the head covers their angle, then short and `ok` green. The start bar is brightest, bars outside
@@ -91,18 +94,15 @@ captured, the whole ring closes green from the start bar in the roll's direction
 crest circles it once a second while the server judges; the ring stays for at least that sweep and
 one revolution, the prompt line says "Got it", and reduced motion holds the ring green and still.
 
-Landing page patterns (`apps/web/src/site/`): every card is a glass pane over the page's faint `RippleDots`, including the inset footer container. `Section` (hairline above, mono eyebrow, serif title, lede, aside),
+Landing page patterns (`apps/web/src/site/`): a calm, static background with no page-wide pointer animation. Existing glass panes remain available for technical figures and the inset footer. The hero uses solid surfaces and no colored ambient glow. Keep the serif display type and pixel wordmark, with a 72px desktop hero heading and 56px mobile heading. `Section` (hairline above, mono eyebrow, serif title, lede, aside),
 numbered `LayerRow`s whose figures carry a mono `FIG. n` caption, SVG data figures (never
 inline styles: the CSP forbids them, so sizes go in attributes), and glass evidence cards with
 serif figures and linked source logos at the bottom. Source marks stay monochrome; benchmark
 and pricing labels distinguish vendor evidence from independent research. Every figure on the page cites the whitepaper. Sections are
-divided by a fading hairline. The hero cycles through three synthetic MakeHuman heads (an East
-Asian woman, a Black man, and a white woman; CC0 mesh, targets, and hair, defined in `AVATARS` in
-`scripts/face-points.ts`; the white woman's bun is modeled there), starting on a random one, each
-holding about nine seconds, then dissolving dot by dot into the next. The head turns and tilts
-toward a mouse or pen anywhere on the page, within its drift's angles. They're sampled into `public/faces/` by `bun run face:points`, framed so every face's eyes sit
-at the same height and spacing, and are never scans or photos of real people. `dot-field` repeats its
-point-cloud texture as a faint static background.
+divided by a fading hairline. Explain the visitor experience before technical evidence. Place the
+research comparisons beside the research section, with their source qualifications intact. The full
+prices-and-limits table stays available in a native disclosure near the end of the landing page and
+on the About page. Show pricing and privacy summaries without requiring that disclosure.
 
 Prefer composing these over new one-off styles. Add a primitive only when a pattern repeats with
 one meaning.

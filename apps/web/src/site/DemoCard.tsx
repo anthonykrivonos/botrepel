@@ -63,7 +63,7 @@ type Status =
 export function DemoCard(): React.JSX.Element {
   const origin = useOrigin();
   const widget = useRef<BotRepelHandle>(null);
-  const [tier, setTier] = useState<Assurance>("liveness");
+  const [tier, setTier] = useState<Assurance>("invisible");
   const [status, setStatus] = useState<Status>({ kind: "ready" });
   const [demoKey, setDemoKey] = useState<DemoKey>(initialDemoKey);
 

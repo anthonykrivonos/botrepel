@@ -2,7 +2,7 @@ import { buttonClassName } from "../components/Button";
 import { CopyButton } from "../components/CopyButton";
 import { useOrigin } from "../hooks/useOrigin";
 import { useReveal } from "../hooks/useReveal";
-import { agentPrompt } from "../shared/constants";
+import { agentPrompt, CONTACT_EMAIL } from "../shared/constants";
 import { FREE_CREDIT_MICROS, formatDollars } from "../shared/pricing";
 
 export function ClosingCta(): React.JSX.Element {
@@ -16,7 +16,7 @@ export function ClosingCta(): React.JSX.Element {
       />
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-8 px-4 py-28 text-center sm:px-6 sm:py-36">
         <h2 className="max-w-4xl font-display text-[3.25rem] leading-[1] font-normal tracking-[-0.025em] sm:text-[5.5rem]">
-          Add BotRepel to a form
+          Start with one form
         </h2>
         <p className="max-w-md text-lg text-fg-muted">
           New accounts that sign in with GitHub or Google receive {formatDollars(FREE_CREDIT_MICROS, 0)} of usage. No
@@ -33,6 +33,13 @@ export function ClosingCta(): React.JSX.Element {
             Copy Agent Prompt
           </CopyButton>
         </div>
+        <p className="text-sm text-fg-muted">
+          Want to talk through your setup first?{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-fg underline underline-offset-4">
+            Get in touch
+          </a>
+          .
+        </p>
       </div>
     </section>
   );

@@ -24,8 +24,7 @@ export function Privacy(): React.JSX.Element {
   return (
     <Section
       id="privacy"
-      eyebrow="Privacy"
-      title="What a check keeps"
+      title="What happens to your visitors’ data"
       lede="The light check looks for a live face in front of the screen. Frames are analyzed in memory and discarded. The service does not build a face template."
       aside={
         <a href="/privacy" className={buttonClassName("secondary")}>
@@ -34,9 +33,8 @@ export function Privacy(): React.JSX.Element {
       }
     >
       <ol data-stagger className="grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-2">
-        {PRINCIPLES.map((principle, index) => (
+        {PRINCIPLES.map((principle) => (
           <li key={principle.name} className="flex flex-col gap-2 bg-canvas p-6 lg:p-8">
-            <span className="font-mono text-xs text-fg-subtle">0{index + 1}</span>
             <h3 className="text-base">{principle.name}</h3>
             <p className="text-sm text-fg-muted">{principle.body}</p>
           </li>
