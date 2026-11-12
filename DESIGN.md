@@ -81,9 +81,11 @@ font size, so `text-lg` scales it. The favicon is the heart alone. `public/og.pn
 wordmark: regenerate it with `bun run og:image`.
 
 The landing-page hero leads with the product description, free-credit terms, and a real widget demo.
-The demo defaults to the invisible check, and stronger checks remain selectable. Do not show a
-simulated face scan or a simulated successful verification as the first impression. The demo panel
-uses a solid raised surface, readable explanatory text, and an explicit privacy link. Camera access
+The demo defaults to the invisible check, and stronger checks remain selectable. Above it, keep the
+animated `LightStage` faces with their head movement, colored light, and point-by-point transitions.
+The synthetic portraits use detailed CC0 skin textures, defined eyes, and soft portrait lighting.
+Label the figure as an illustration; it does not represent a visitor scan or a verification result.
+The demo panel uses a solid raised surface, readable explanatory text, and an explicit privacy link. Camera access
 must follow the visitor's action and consent. A founder and contact note follows the hero, with
 links to the actual person and legal operator rather than unsupported badges or endorsements.
 

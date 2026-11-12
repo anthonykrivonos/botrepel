@@ -5,7 +5,7 @@ import { type FaceMix, dissolveOrder, faceMix } from "../utils/faceCycle";
 import { sentColor } from "../utils/light";
 import { type Spring, stepSpring } from "../utils/spring";
 
-const LEVELS = 24;
+const LEVELS = 48;
 /** How far behind the sent light the reflection is drawn: a real face answers within one frame. */
 const REFLECTION_LAG_S = 0.034;
 const HISTORY = 240;
@@ -156,9 +156,9 @@ export function LightStage({ className }: { readonly className?: string }): Reac
           const nz = nz1 * cp + p.ny * sp;
           const nx = nx0 * cr - ny0 * sr;
           const ny = nx0 * sr + ny0 * cr;
-          // Lambert shading toward the screen with a little ambient fill, a faint glint, times the albedo.
+          // Broad portrait lighting keeps eye sockets readable; a soft glint retains facial depth.
           const facing = Math.max(0, nx * LIGHT.x + ny * LIGHT.y + nz * LIGHT.z);
-          const light = (0.14 + 0.86 * facing ** 1.4 + 0.12 * facing ** 30) * p.albedo;
+          const light = (0.3 + 0.64 * facing + 0.06 * facing ** 20) * p.albedo;
           const level = Math.min(LEVELS - 1, Math.floor(light * LEVELS));
           buckets[level]!.push(centerX + x * scale, centerY - y * scale);
         }
@@ -166,7 +166,7 @@ export function LightStage({ className }: { readonly className?: string }): Reac
       for (const [level, coordinates] of buckets.entries()) {
         // Bright surfaces lean toward white, so the face looks lit by colored light rather than made of it.
         const brightness = 0.05 + 0.95 * ((level + 0.5) / LEVELS) ** 0.8;
-        context.fillStyle = css(skinTone(lit, 0.35 * brightness), brightness);
+        context.fillStyle = css(skinTone(lit, 0.5 * brightness), brightness);
         for (let index = 0; index < coordinates.length; index += 2) {
           context.fillRect(coordinates[index]!, coordinates[index + 1]!, size, size);
         }

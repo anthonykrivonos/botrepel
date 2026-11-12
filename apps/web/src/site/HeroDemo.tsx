@@ -1,4 +1,5 @@
 import { DemoCard } from "./DemoCard";
+import { LightStage } from "./LightStage";
 import { useHydrated } from "../hooks/useHydrated";
 
 /** An interactive product sample. No simulated success or camera access on page load. */
@@ -10,7 +11,14 @@ export function HeroDemo(): React.JSX.Element {
       aria-labelledby="demo-heading"
       className="scroll-mt-24 overflow-hidden rounded-dialog border border-line-strong bg-surface-raised"
     >
-      <div className="flex flex-col gap-3 p-6 pb-5 sm:p-8 sm:pb-6">
+      <figure className="relative aspect-[4/3] bg-canvas">
+        <LightStage className="absolute inset-0 size-full" />
+        <figcaption className="pointer-events-none absolute top-4 right-4 left-4 flex justify-between font-mono text-[11px] text-fg-subtle">
+          <span>Light reflection</span>
+          <span>Illustration</span>
+        </figcaption>
+      </figure>
+      <div className="flex flex-col gap-3 border-t border-line p-6 pb-5 sm:p-8 sm:pb-6">
         <h2 id="demo-heading" className="font-display text-[2rem] leading-tight font-normal">
           See what your visitors see
         </h2>

@@ -2,8 +2,8 @@
  * Builds the hero faces (apps/web/public/faces/<name>.bin) from MakeHuman's CC0 assets. For each
  * avatar in AVATARS: the base mesh with its morph targets applied and a CC0 hairstyle fitted to it
  * (optionally restyled with a mid-part and soft waves), seen from the front on a regular grid (a
- * depth map with smooth normals), with eyeballs at the mesh's eye joints and a dithered fade below
- * the chin. Synthetic, not scans of real people. Rerun after changing them: bun run face:points
+ * depth map with smooth normals), with CC0 skin and brow textures, detailed eyes at the mesh's eye
+ * joints, and a dithered fade below the chin. Synthetic, not scans of real people. Rerun after changing them: bun run face:points
  * (the first run downloads MakeHuman's 280 MB asset pack into .cache/). `--only <name>` builds one
  * avatar, and `--out <dir>` writes somewhere else, for trying settings without touching the site.
  *
@@ -15,6 +15,7 @@ import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { PNG } from "pngjs";
 import { FACE_SCALE, FACE_STEP, FACES } from "../apps/web/src/shared/face";
 
 /** MakeHuman's repository at a fixed commit; its assets are CC0 1.0 (makehuman/license.txt, section C). */
@@ -31,6 +32,8 @@ interface Avatar {
   readonly targets: readonly Target[];
   /** A hairstyle from the asset pack, fitted to the morphed body. */
   readonly hair: string;
+  /** CC0 diffuse skin texture. Its luminance preserves lips and natural surface detail. */
+  readonly texture: string;
   /** A mid-part down the center of the hair on top. */
   readonly part?: boolean;
   /** Soft waves below the temples. */
@@ -53,6 +56,9 @@ const AVATARS: Readonly<Record<(typeof FACES)[number], Avatar>> = {
   "asian-woman": {
     targets: [
       ["macrodetails/asian-female-young", 1],
+      ["expression/units/asian/mouth-corner-puller", 0.22],
+      ["expression/units/asian/eye-left-opened-up", 0.18],
+      ["expression/units/asian/eye-right-opened-up", 0.18],
       // Slightly larger eyes.
       ["eyes/l-eye-scale-incr", 0.4],
       ["eyes/r-eye-scale-incr", 0.4],
@@ -69,6 +75,7 @@ const AVATARS: Readonly<Record<(typeof FACES)[number], Avatar>> = {
       ["head/head-fat-decr", 0.25],
     ],
     hair: "hair/long01/long01",
+    texture: "skins/young_asian_female/young_lightskinned_female_diffuse3.png",
     part: true,
     waves: true,
     skin: 1,
@@ -77,6 +84,7 @@ const AVATARS: Readonly<Record<(typeof FACES)[number], Avatar>> = {
   "black-man": {
     targets: [
       ["macrodetails/african-male-young", 1],
+      ["expression/units/african/mouth-corner-puller", 0.18],
       // Lips closed and relaxed: the male base mesh's lips sit slightly apart.
       ["expression/units/african/mouth-compression", 0.45],
       // MakeHuman's ideal proportions, for an even, natural face.
@@ -94,6 +102,7 @@ const AVATARS: Readonly<Record<(typeof FACES)[number], Avatar>> = {
       ["eyes/r-eye-scale-incr", 0.2],
     ],
     hair: "hair/short04/short04",
+    texture: "skins/young_african_male/young_darkskinned_male_diffuse.png",
     // Sideburns trimmed to the top of the ear.
     sideburns: 1.15,
     // Darker skin returns less light, though not so little that the eye sockets read as holes.
@@ -105,6 +114,9 @@ const AVATARS: Readonly<Record<(typeof FACES)[number], Avatar>> = {
   "white-woman": {
     targets: [
       ["macrodetails/caucasian-female-young", 1],
+      ["expression/units/caucasian/mouth-corner-puller", 0.22],
+      ["expression/units/caucasian/eye-left-opened-up", 0.18],
+      ["expression/units/caucasian/eye-right-opened-up", 0.18],
       // A little slimmer, as for the first face.
       ["macrodetails/universal-female-young-averagemuscle-minweight", 0.35],
       ["cheek/l-cheek-volume-decr", 0.3],
@@ -112,6 +124,7 @@ const AVATARS: Readonly<Record<(typeof FACES)[number], Avatar>> = {
     ],
     // Hair pulled back into a bun on the crown; lighter hair than the others.
     hair: "hair/ponytail01/ponytail01",
+    texture: "skins/young_caucasian_female2/young_lightskinned_female_diffuse2.png",
     bun: true,
     skin: 1,
     hairAlbedo: 0.5,
@@ -134,8 +147,8 @@ const PART = { x: FACE_STEP / 2 / (2.2 / HEAD_HEIGHT), gap: 0.012, band: 0.15, d
  * top of the scalp (up) and the head's axis (back), and the coils of hair wound around it.
  */
 const BUN = { radius: 0.33, squash: 0.75, up: -0.05, back: 0.3, coils: 3, ripple: 0.1 };
-/** How much light the eyes return: the white, and the iris. */
-const EYE_ALBEDO = { white: 0.7, iris: 0.22 };
+/** How much light the eyes return, including a small screen catchlight. */
+const EYE_ALBEDO = { white: 0.82, iris: 0.3, pupil: 0.07, catchlight: 1 };
 /** How far behind its neighbors (output units) a cell must be to count as a hole. */
 const HOLE_DEPTH = 0.06;
 const HOLE_PASSES = 4;
@@ -193,12 +206,16 @@ async function packFile(path: string): Promise<string> {
 interface BaseMesh {
   readonly vertices: readonly Vec[];
   readonly triangles: readonly (readonly [number, number, number])[];
+  readonly uvs: readonly (readonly [number, number])[];
+  readonly textureTriangles: readonly (readonly [number, number, number])[];
   readonly eyes: ReadonlyMap<string, ReadonlySet<number>>;
 }
 
-function parseBaseMesh(obj: string): BaseMesh {
+function parseBaseMesh(obj: string, allFaces = false): BaseMesh {
   const vertices: Vec[] = [];
   const triangles: [number, number, number][] = [];
+  const uvs: [number, number][] = [];
+  const textureTriangles: [number, number, number][] = [];
   const eyes = new Map<string, Set<number>>([
     ["joint-l-eye", new Set()],
     ["joint-r-eye", new Set()],
@@ -208,12 +225,16 @@ function parseBaseMesh(obj: string): BaseMesh {
     const [kind, ...rest] = line.trim().split(/\s+/);
     if (kind === "v") {
       vertices.push(rest.slice(0, 3).map(Number) as Vec);
+    } else if (kind === "vt") {
+      uvs.push(rest.slice(0, 2).map(Number) as [number, number]);
     } else if (kind === "g") {
       group = rest[0] ?? "";
-    } else if (kind === "f" && group === "body") {
+    } else if (kind === "f" && (allFaces || group === "body")) {
       const corners = rest.map((corner) => Number(corner.split("/")[0]) - 1);
+      const textures = rest.map((corner) => Number(corner.split("/")[1]) - 1);
       for (let index = 1; index + 1 < corners.length; index++) {
         triangles.push([corners[0]!, corners[index]!, corners[index + 1]!]);
+        textureTriangles.push([textures[0]!, textures[index]!, textures[index + 1]!]);
       }
     } else if (kind === "f" && eyes.has(group)) {
       for (const corner of rest) {
@@ -221,15 +242,71 @@ function parseBaseMesh(obj: string): BaseMesh {
       }
     }
   }
-  return { vertices, triangles, eyes };
+  return { vertices, triangles, uvs, textureTriangles, eyes };
+}
+
+/** MakeHuman attachments follow three body vertices and a scaled offset. */
+function fitMesh(fit: string, vertices: readonly Vec[]): Vec[] {
+  const scales: Record<string, number> = {};
+  const fitted: Vec[] = [];
+  let fitting = false;
+  for (const line of fit.split("\n")) {
+    const fields = line.trim().split(/\s+/);
+    if (/^[xyz]_scale$/.test(fields[0]!)) {
+      const axis = "xyz".indexOf(fields[0]![0]!);
+      const [a, b, reference] = fields.slice(1).map(Number);
+      scales[axis] = Math.abs(vertices[a!]![axis]! - vertices[b!]![axis]!) / reference!;
+    } else if (fields[0] === "verts") {
+      fitting = true;
+    } else if (fitting && fields.length === 9 && fields.every((field) => Number.isFinite(Number(field)))) {
+      const [a, b, c, wa, wb, wc, dx, dy, dz] = fields.map(Number);
+      const offset = [dx!, dy!, dz!];
+      fitted.push(
+        [0, 1, 2].map(
+          (axis) =>
+            wa! * vertices[a!]![axis]! +
+            wb! * vertices[b!]![axis]! +
+            wc! * vertices[c!]![axis]! +
+            offset[axis]! * scales[axis]!,
+        ) as Vec,
+      );
+    }
+  }
+  return fitted;
+}
+
+function texturePixel(texture: PNG, mesh: BaseMesh, triangle: number, w: number, u: number, v: number): number {
+  const [a, b, c] = mesh.textureTriangles[triangle]!.map((index) => mesh.uvs[index]!);
+  const tx = Math.max(
+    0,
+    Math.min(texture.width - 1, Math.round((w * a![0] + u * b![0] + v * c![0]) * (texture.width - 1))),
+  );
+  const ty = Math.max(
+    0,
+    Math.min(texture.height - 1, Math.round((1 - w * a![1] - u * b![1] - v * c![1]) * (texture.height - 1))),
+  );
+  return (ty * texture.width + tx) * 4;
 }
 
 async function buildFace(base: BaseMesh, avatar: Avatar): Promise<Int16Array> {
+  const zip = resolve(import.meta.dir, "../.cache/makehuman_system_assets_cc0.zip");
+  // packFile below ensures the shared asset pack is present before extracting the PNG.
   const [hairObj, hairFit, ...targets] = await Promise.all([
     packFile(`${avatar.hair}.obj`),
     packFile(`${avatar.hair}.mhclo`),
     ...avatar.targets.map(([path]) => text(`${SOURCE}/makehuman/data/targets/${path}.target`)),
   ]);
+  const texture = PNG.sync.read(Buffer.from(await Bun.$`unzip -p ${zip} ${avatar.texture}`.arrayBuffer()));
+  const browPath = "eyebrows/eyebrow001/eyebrow001";
+  const brow = parseBaseMesh(await packFile(`${browPath}.obj`), true);
+  const browFit = await packFile(`${browPath}.mhclo`);
+  const browTexture = PNG.sync.read(Buffer.from(await Bun.$`unzip -p ${zip} ${browPath + ".png"}`.arrayBuffer()));
+  const textureAlbedo = (triangle: number, w: number, u: number, v: number): number => {
+    const pixel = texturePixel(texture, base, triangle, w, u, v);
+    const luminance =
+      (0.2126 * texture.data[pixel]! + 0.7152 * texture.data[pixel + 1]! + 0.0722 * texture.data[pixel + 2]!) / 255;
+    return avatar.skin * Math.min(1, Math.sqrt(luminance) * 1.35);
+  };
   const vertices: Vec[] = base.vertices.map((vertex) => [...vertex]);
   const triangles: [number, number, number][] = base.triangles.map((triangle) => [...triangle]);
 
@@ -247,33 +324,8 @@ async function buildFace(base: BaseMesh, avatar: Avatar): Promise<Int16Array> {
     }
   }
 
-  // Fit the hair as MakeHuman does: each vertex is a weighted sum of three body vertices plus an
-  // offset scaled by the body's own measurements (x_scale etc. name two vertices and a reference).
-  const scales: Record<string, number> = {};
-  const hairVertices: Vec[] = [];
-  let fitting = false;
-  for (const line of hairFit.split("\n")) {
-    const fields = line.trim().split(/\s+/);
-    if (/^[xyz]_scale$/.test(fields[0]!)) {
-      const axis = "xyz".indexOf(fields[0]![0]!);
-      const [a, b, reference] = fields.slice(1).map(Number);
-      scales[axis] = Math.abs(vertices[a!]![axis]! - vertices[b!]![axis]!) / reference!;
-    } else if (fields[0] === "verts") {
-      fitting = true;
-    } else if (fitting && fields.length === 9 && fields.every((field) => Number.isFinite(Number(field)))) {
-      const [a, b, c, wa, wb, wc, dx, dy, dz] = fields.map(Number);
-      const offset = [dx!, dy!, dz!];
-      hairVertices.push(
-        [0, 1, 2].map(
-          (axis) =>
-            wa! * vertices[a!]![axis]! +
-            wb! * vertices[b!]![axis]! +
-            wc! * vertices[c!]![axis]! +
-            offset[axis]! * scales[axis]!,
-        ) as Vec,
-      );
-    }
-  }
+  const hairVertices = fitMesh(hairFit, vertices);
+  const browVertices = fitMesh(browFit, vertices);
   // Style the hair: a mid-part, where the hair on top is cut along the part and the hair on each side
   // is squeezed up to it, leaving a thin line of scalp, and soft waves below the temples, rippling the
   // hair outward from the head's axis.
@@ -355,6 +407,12 @@ async function buildFace(base: BaseMesh, avatar: Avatar): Promise<Int16Array> {
   const bodyTriangles = triangles.length;
   vertices.push(...hairVertices);
   triangles.push(...hairTriangles);
+  const browStart = triangles.length;
+  const browOffset = vertices.length;
+  vertices.push(...browVertices);
+  triangles.push(
+    ...brow.triangles.map(([a, b, c]): [number, number, number] => [a + browOffset, b + browOffset, c + browOffset]),
+  );
 
   // Area-weighted vertex normals over the whole body, so edges between faces stay smooth.
   const normals: Vec[] = vertices.map(() => [0, 0, 0]);
@@ -427,15 +485,27 @@ async function buildFace(base: BaseMesh, avatar: Avatar): Promise<Int16Array> {
         const z = w * pa![2] + u * pb![2] + v * pc![2];
         const cell = row * columns + column;
         if (z > depth[cell]!) {
+          const browAlpha =
+            triangle >= browStart
+              ? browTexture.data[texturePixel(browTexture, brow, triangle - browStart, w, u, v) + 3]! / 255
+              : 0;
+          if (triangle >= browStart && browAlpha < 0.05) {
+            continue;
+          }
           depth[cell] = z;
           const n = [0, 1, 2].map(
             (axis) => w * normals[a]![axis]! + u * normals[b]![axis]! + v * normals[c]![axis]!,
           ) as Vec;
           // Hair cards are wound either way; light them from the side facing the screen.
           normal[cell] = triangle >= bodyTriangles && n[2] < 0 ? (n.map((value) => -value) as Vec) : n;
-          albedo[cell] = triangle >= bodyTriangles ? avatar.hairAlbedo : avatar.skin;
+          albedo[cell] =
+            triangle >= browStart
+              ? albedo[cell]! * (1 - browAlpha) + avatar.hairAlbedo * 0.65 * browAlpha
+              : triangle >= bodyTriangles
+                ? avatar.hairAlbedo
+                : textureAlbedo(triangle, w, u, v);
           skin[cell] = triangle >= bodyTriangles ? 0 : 1;
-          crown[cell] = triangle >= bodyTriangles + styledHair ? 1 : 0;
+          crown[cell] = triangle >= bodyTriangles + styledHair && triangle < browStart ? 1 : 0;
         }
       }
     }
@@ -455,7 +525,15 @@ async function buildFace(base: BaseMesh, avatar: Avatar): Promise<Int16Array> {
           depth[cell] = eye[2] + Math.sqrt(inside);
           normal[cell] = [dx, dy, Math.sqrt(inside)];
           skin[cell] = 0;
-          albedo[cell] = Math.hypot(dx, dy) < IRIS * radius ? EYE_ALBEDO.iris : EYE_ALBEDO.white;
+          const distance = Math.hypot(dx, dy) / radius;
+          const catchlight = Math.hypot(dx / radius + 0.18, dy / radius - 0.22) < 0.12;
+          albedo[cell] = catchlight
+            ? EYE_ALBEDO.catchlight
+            : distance < 0.22
+              ? EYE_ALBEDO.pupil
+              : distance < IRIS
+                ? EYE_ALBEDO.iris * (0.85 + 0.15 * Math.cos(24 * Math.atan2(dy, dx)))
+                : EYE_ALBEDO.white;
         }
       }
     }
@@ -470,6 +548,10 @@ async function buildFace(base: BaseMesh, avatar: Avatar): Promise<Int16Array> {
     for (let row = 1; row < rows - 1; row++) {
       for (let column = 1; column < columns - 1; column++) {
         const cell = row * columns + column;
+        // Never flatten the eyes or paint over their pupils while closing gaps in the lips.
+        if (!skin[cell]) {
+          continue;
+        }
         const around = [cell - 1, cell + 1, cell - columns, cell + columns, cell - columns - 1, cell + columns + 1];
         const near = around.filter(
           (other) =>
@@ -480,7 +562,7 @@ async function buildFace(base: BaseMesh, avatar: Avatar): Promise<Int16Array> {
         if (near.length >= 4) {
           filled[cell] = near.reduce((sum, other) => sum + depth[other]!, 0) / near.length;
           normal[cell] = [0, 1, 2].map((axis) => near.reduce((sum, other) => sum + normal[other]![axis]!, 0)) as Vec;
-          albedo[cell] = avatar.skin;
+          albedo[cell] = near.reduce((sum, other) => sum + albedo[other]!, 0) / near.length;
           skin[cell] = 1;
           changed = true;
         }

@@ -8,7 +8,7 @@ export const FACES = ["asian-woman", "black-man", "white-woman"] as const;
 export const facePath = (name: (typeof FACES)[number]): string => `/faces/${name}.bin`;
 export const FACE_SCALE = 1 / 16_384;
 /** Grid spacing between points, in the same units as the positions. */
-export const FACE_STEP = 0.025;
+export const FACE_STEP = 0.0125;
 const STRIDE = 6;
 
 export interface FacePoint {
