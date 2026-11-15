@@ -101,7 +101,7 @@ export const pages: readonly SitePage[] = [
     description: `BotRepel adds human verification to a website form. Invisible checks are ${formatPerThousand(PRICE_MICROS.invisible)} per 1,000 successful verifications. Each token works once for five minutes.`,
     heading: "Human verification for websites",
     index: true,
-    updated: "2026-11-11",
+    updated: "2026-11-15",
     kind: "home",
   },
   {
@@ -118,10 +118,10 @@ export const pages: readonly SitePage[] = [
     path: "/about",
     title: "About BotRepel human verification for websites",
     description:
-      "Review BotRepel human verification prices, retention windows, token lifetime, and the limits used by the running service.",
+      "Meet Anthony Krivonos, the founder of BotRepel, and learn about the human verification service, its checks, prices, and data retention.",
     heading: "About BotRepel",
     index: true,
-    updated: CONTENT_UPDATED,
+    updated: "2026-11-15",
     kind: "page",
   },
   {

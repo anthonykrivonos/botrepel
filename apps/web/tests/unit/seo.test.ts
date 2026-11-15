@@ -37,8 +37,8 @@ describe("discovery files", () => {
     expect(files["robots.txt"]).toContain("Sitemap: https://botrepel.com/sitemap.xml");
     expect(files["robots.txt"]).toContain("Disallow: /w/");
     expect(files["robots.txt"]).toContain("Disallow: /dashboard");
-    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/</loc><lastmod>2026-11-11</lastmod>");
-    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/about</loc><lastmod>2026-11-10</lastmod>");
+    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/</loc><lastmod>2026-11-15</lastmod>");
+    expect(files["sitemap.xml"]).toContain("<loc>https://botrepel.com/about</loc><lastmod>2026-11-15</lastmod>");
     expect(files["sitemap.xml"]).toContain(
       "<loc>https://botrepel.com/articles/botrepel-vs-recaptcha</loc><lastmod>2026-11-10</lastmod>",
     );

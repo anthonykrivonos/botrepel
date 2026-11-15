@@ -3,7 +3,6 @@ import { ClosingCta } from "./ClosingCta";
 import { EvidenceBar } from "./EvidenceBar";
 import { FactList } from "./FactList";
 import { Faq } from "./Faq";
-import { FounderNote } from "./FounderNote";
 import { Hero } from "./Hero";
 import { Integrate } from "./Integrate";
 import { Layers } from "./Layers";
@@ -21,7 +20,6 @@ export function HomePage(): React.JSX.Element {
       <Nav />
       <main id="content">
         <Hero />
-        <FounderNote />
         <Layers />
         <UseCases />
         <Privacy />

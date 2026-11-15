@@ -86,8 +86,10 @@ animated `LightStage` faces with their head movement, colored light, and point-b
 The synthetic portraits use detailed CC0 skin textures, defined eyes, and soft portrait lighting.
 Label the figure as an illustration; it does not represent a visitor scan or a verification result.
 The demo panel uses a solid raised surface, readable explanatory text, and an explicit privacy link. Camera access
-must follow the visitor's action and consent. A founder and contact note follows the hero, with
-links to the actual person and legal operator rather than unsupported badges or endorsements.
+must follow the visitor's action and consent. Keep the founder biography and portrait on `/about`,
+linked from the navigation and footer, rather than in a separate homepage section. The About page
+pairs a natural-color portrait with a short, sourced biography and contact links. Portraits retain
+their original aspect ratio and use explicit dimensions to reserve space while loading.
 
 The light check's head roll (`PoseRing`) rings the camera oval with 60 bars: long and white until
 the head covers their angle, then short and `ok` green. The start bar is brightest, bars outside

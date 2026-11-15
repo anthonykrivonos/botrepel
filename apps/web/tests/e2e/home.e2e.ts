@@ -19,7 +19,7 @@ test("the home page renders, offers a prompt for this server, and fits the scree
   await expect(page.getByText(`Follow ${E2E_ORIGIN}/install.md`).first()).toBeVisible();
   // The live demo mounts after hydration with the real widget.
   await expect(page.getByRole("radio", { name: /Invisible check/ })).toBeChecked();
-  await expect(page.getByRole("heading", { name: "Built by Anthony Krivonos" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Built by Anthony Krivonos" })).toHaveCount(0);
   await expect(page.locator('iframe[src*="/w/br_pk_"]')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
     page.viewportSize()!.width,
@@ -89,6 +89,24 @@ test("every nav and footer link resolves", async ({ page, request }) => {
     const response = await request.get(href.split("#")[0] || "/", { maxRedirects: 0 });
     expect(response.status(), href).toBe(200);
   }
+});
+
+test("the About page is linked from home and shows the founder profile @phone", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("navigation", { name: "Footer" }).getByRole("link", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL(/\/about$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("About BotRepel");
+  await expect(page.getByRole("heading", { name: "Anthony Krivonos", exact: true })).toBeVisible();
+  const portrait = page.getByRole("img", { name: "Anthony Krivonos", exact: true });
+  await expect(portrait).toBeVisible();
+  await expect(portrait).toHaveJSProperty("naturalWidth", 768);
+  await expect(page.getByRole("link", { name: "LinkedIn", exact: true })).toHaveAttribute(
+    "href",
+    "https://www.linkedin.com/in/anthonykrivonos/",
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+    page.viewportSize()!.width,
+  );
 });
 
 test("the legal pages render", async ({ page }) => {
