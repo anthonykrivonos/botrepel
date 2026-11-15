@@ -2,7 +2,7 @@ import { articleByPath } from "./articles";
 import type { SitePage } from "./content";
 import { FAQ } from "./faq-data";
 import { hubBySlug } from "./guides/hubs";
-import { OPERATOR, OPERATOR_POSTAL } from "./legal";
+import { OPERATOR } from "./legal";
 import { CONTACT_EMAIL, SITE_DOMAIN, SITE_NAME } from "../shared/constants";
 import { MICROS_PER_DOLLAR, PRICE_MICROS } from "../shared/pricing";
 import { absolute } from "../shared/utils";
@@ -68,7 +68,6 @@ export function structuredData(page: SitePage, origin: string): JsonLdDocument {
       email: CONTACT_EMAIL,
       logo: absolute(origin, "/favicon.svg"),
       sameAs: [...SAME_AS],
-      address: { "@type": "PostalAddress", ...OPERATOR_POSTAL },
     },
     {
       "@type": "WebSite",

@@ -9,6 +9,7 @@ import { pages, HOME_HEADING } from "../../src/site/content";
 import { FACT_LIMITS } from "../../src/site/facts";
 import { installMarkdown } from "../../src/site/install";
 import { validateStructuredData } from "../../src/site/jsonld";
+import { OPERATOR_POSTAL } from "../../src/site/legal";
 import { discoveryFiles, documentTitle, escapeHtml, renderHead, resolveSeoConfig } from "../../src/site/seo";
 
 describe("resolveSeoConfig", () => {
@@ -92,6 +93,7 @@ describe("indexable pages", () => {
       expect(page.description.length, page.path).toBeLessThanOrEqual(155);
       expect(page.description.toLowerCase(), page.path).toContain("human verification");
       const head = renderHead(page, config);
+      expect(head, page.path).not.toContain(OPERATOR_POSTAL.streetAddress);
       expect(head).toContain(`<title>${title}</title>`);
       expect(head).toContain(`<meta name="description" content="${escapeHtml(page.description)}">`);
       expect(head).toContain(
@@ -105,6 +107,9 @@ describe("indexable pages", () => {
       expect(html.match(/<h1\b/g)?.length ?? 0, page.path).toBe(1);
       expect(html, page.path).toContain(`>${page.heading}<`);
       expect(html, page.path).not.toContain("demonstration cursor");
+      if (page.path === "/" || page.path === "/about") {
+        expect(html, page.path).not.toContain(OPERATOR_POSTAL.streetAddress);
+      }
       if (page.path === "/") {
         expect(title).toBe("BotRepel (Bot Repel): Human verification for web forms");
         expect(page.description.startsWith("BotRepel")).toBe(true);

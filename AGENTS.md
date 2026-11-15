@@ -23,6 +23,7 @@ Human verification for websites in the AI era.
 
 ## Copy
 
+- Do not advertise the operator's street address in marketing copy or search metadata.
 - Write public copy in short, complete sentences. Keep it objective and neutral. State what the product does, what it stores, what it costs, and what the reader can do next.
 - Do not use marketing slogans or playful asides. Do not use em dashes. Do not use contrast formulas such as "It is X, not Y" or "not just X, but Y". When a limit matters, give it its own sentence.
 - Preserve every fact, qualification, number, prerequisite, consequence, and available next step, and keep technical terms consistent. Distinguish liveness from identity and capture from approval, and remember that creating keys does not mean installation is complete. Never invent progress, remembered visits, user emotions, or protection the current state does not establish.

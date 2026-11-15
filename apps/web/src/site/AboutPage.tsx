@@ -1,7 +1,7 @@
 import { pageByPath } from "./content";
 import { FactList } from "./FactList";
 import { FounderProfile } from "./FounderProfile";
-import { OPERATOR, OPERATOR_ADDRESS } from "./legal";
+import { OPERATOR } from "./legal";
 import { SiteFooter } from "./SiteFooter";
 import { Nav } from "../components/Nav";
 
@@ -15,7 +15,7 @@ export function AboutPage(): React.JSX.Element {
           <h1 className="font-display text-display-sm font-normal">{page?.heading}</h1>
           <p className="text-lg text-fg-muted">
             BotRepel is a human verification service that checks a person is present on a form, so a website can limit
-            automated submissions. {OPERATOR} operates it from {OPERATOR_ADDRESS}.
+            automated submissions. The service is operated by {OPERATOR}.
           </p>
         </header>
         <FounderProfile />
